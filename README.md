@@ -1,29 +1,18 @@
-# README #
+## Getting Started
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
-### What is this repository for? ###
+## Folder Structure
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+The workspace contains two folders by default, where:
 
-### How do I get set up? ###
+- `src`: the folder to maintain sources
+- `lib`: the folder to maintain dependencies
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
-### Contribution guidelines ###
+> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
-* Writing tests
-* Code review
-* Other guidelines
+## Dependency Management
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
