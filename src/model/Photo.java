@@ -8,7 +8,7 @@ import java.util.Calendar;
  * @author Marc Rizzolo
  */
 
-public class Photo implements Serializable{
+public class Photo implements Serializable {
     
     static final long serialVersionUID = 1L;
     private ArrayList<Tag> tags = new ArrayList<>();
