@@ -1,3 +1,5 @@
+package model;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,7 +19,7 @@ public class User implements Serializable{
     
     public User (String username){
         this.username = username;
-        this.albums = new ArrayList<>();
+        albums = new ArrayList<Album>();
     }
 
     //username methods
@@ -27,6 +29,10 @@ public class User implements Serializable{
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public String toString(){
+        return this.username;
     }
 
     //album methods

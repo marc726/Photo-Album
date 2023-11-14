@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -27,8 +26,6 @@ public class LoginController {
     @FXML
     private TextField usernameTextField;
 
-    @FXML
-    private TextField passwordTextField;
 
     /**
      * This method handles the login button action.
@@ -38,11 +35,15 @@ public class LoginController {
     
     @FXML
     public void handleLoginButtonAction(ActionEvent event) {
-        // Placeholder for login logic
+        //get username entered from LoginScene
+        //check if username is valid
+        //if valid, load AdminDashScene or UserDashScene
+        //if not valid, display error message
+
         Stage stage = (Stage) usernameTextField.getScene().getWindow();
         Parent root;
 
-        if ("admin".equals(usernameTextField.getText()) && "admin".equals(passwordTextField.getText())) {
+        if ("admin".equals(usernameTextField.getText())) {
             try {
                 root = FXMLLoader.load(getClass().getResource("/view/AdminDashScene.fxml"));
             } catch (IOException e) {
@@ -50,14 +51,19 @@ public class LoginController {
                 return;
             }
         } else {
-            // Placeholder for regular login logic
-            return;
+            try {
+                root = FXMLLoader.load(getClass().getResource("/view/UserDashScene.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
         }
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
+    
 
     /**
      * This method initializes the view and sets the JavaFX and Java version in the label.
