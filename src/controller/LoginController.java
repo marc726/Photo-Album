@@ -8,9 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.User;
+
+
 import java.io.IOException;
 
 
@@ -52,7 +56,11 @@ public class LoginController {
             }
         } else {
             try {
-                root = FXMLLoader.load(getClass().getResource("/view/UserDashScene.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserDashScene.fxml"));
+                root = loader.load(); // Load the FXML file
+                UserController userController = loader.getController(); // Get the UserController from the loader
+                User user = new User(usernameTextField.getText()); // Create a User object for the session
+                userController.initSession(user); // Pass the User object to the UserController
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -64,7 +72,6 @@ public class LoginController {
         stage.show();
     }
     
-
     /**
      * This method initializes the view and sets the JavaFX and Java version in the label.
      */
