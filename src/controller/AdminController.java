@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,25 +52,39 @@ public class AdminController implements Initializable{
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(username -> {
-            User newUser = new User(username);
-            users.getItems().add(newUser);
-            users.refresh();
-            saveData();
-
+            if (users.getItems().stream().anyMatch(user -> user.getUsername().equals(username))) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Username already exists");
+                alert.setContentText("A user with the same username already exists. Please choose a different username.");
+                alert.showAndWait();
+            } else {
+                User newUser = new User(username);
+                users.getItems().add(newUser);
+                users.refresh();
+                saveData();
+            }
         });
     }
 
     @FXML
     public void handleDeleteUserButtonAction(ActionEvent event) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Delete User");
-        dialog.setHeaderText("Enter the username of the user you want to delete:");
-        dialog.setContentText("Username:");
+        //delete user selected from listview. add confirmation dialog
+        User selectedUser = users.getSelectionModel().getSelectedItem();
 
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(username -> {
-            // TODO Delete the user from the database and update the listview
-        });
+        if (selectedUser != null) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Delete User");
+            alert.setContentText("Are you sure you want to delete this user?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                users.getItems().remove(selectedUser);
+                users.refresh();
+                saveData();
+            }
+        }
     }
 
     @FXML
