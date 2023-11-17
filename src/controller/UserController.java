@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.User;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.fxml.Initializable;
 
 import java.io.IOException;
@@ -25,6 +26,9 @@ public class UserController{
     @FXML
     private Label welcomeLabel;
 
+    @FXML
+    private AnchorPane rootPane;
+    
     // Add other FXML elements that this controller will manage
 
     private User user;
@@ -56,12 +60,29 @@ public class UserController{
      */
     @FXML
     public void handleLogoutButtonAction(ActionEvent event) throws IOException {
-        // Change to the login scene
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        // Use welcomeLabel to get the Stage
+        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/view/LoginScene.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     // Other methods...
+
+    /**
+     * Handles the action of uploading a photo associated with the logged-in user.
+     * @param event The event that triggered the upload action.
+     */
+    @FXML
+    public void handleUploadPhotoButtonAction(ActionEvent event) {
+        // Implement the logic for uploading a photo associated with the logged-in user
+        // You can use the user object to get the necessary information
+        // For example:
+        // String userId = user.getUserId();
+        // String username = user.getUsername();
+        // ...
+        // Implement the logic to upload the photo here
+    }
 }
+
+    

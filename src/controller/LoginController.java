@@ -13,6 +13,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.User;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
 
 
 import java.io.IOException;
@@ -39,11 +42,8 @@ public class LoginController {
     
     @FXML
     public void handleLoginButtonAction(ActionEvent event) {
-        //get username entered from LoginScene
-        //check if username is valid
-        //if valid, load AdminDashScene or UserDashScene
-        //if not valid, display error message
 
+        List<User> users = loadUsers();
         Stage stage = (Stage) usernameTextField.getScene().getWindow();
         Parent root;
 
@@ -55,6 +55,25 @@ public class LoginController {
                 return;
             }
         } else {
+
+            if (users == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Error loading data");
+                alert.setContentText("Error loading data. Please try again.");
+                alert.showAndWait();
+                return;
+            }
+
+            if (users.stream().noneMatch(user -> user.getUsername().equals(usernameTextField.getText()))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid username");
+                alert.setContentText("The username you entered does not exist. Please try again.");
+                alert.showAndWait();
+                return;
+            }
+            
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserDashScene.fxml"));
                 root = loader.load(); // Load the FXML file
@@ -80,5 +99,21 @@ public class LoginController {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
         label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
+    }
+
+    private List<User> loadUsers (){
+        try {
+            FileInputStream fis = new FileInputStream("data/data.dat");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<User> users = (List<User>) ois.readObject();
+            ois.close();
+            fis.close();
+            System.out.println("Data loaded successfully");
+            return users;
+        } catch (Exception e) {
+            System.err.println("Error loading data: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
