@@ -1,88 +1,108 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import model.User;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.fxml.Initializable;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import model.Album;
+import model.User;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
 
-
-/**
- * UserController manages the actions that can be performed by a logged-in user.
- * This includes album management, photo management, and logging out.
- */
-public class UserController{
+public class UserController {
 
     @FXML
     private Label welcomeLabel;
-
     @FXML
-    private AnchorPane rootPane;
-    
-    // Add other FXML elements that this controller will manage
+    private VBox albumContainer;
+    @FXML
+    private Label albumInfoLabel;
+    @FXML
+    private Button createAlbumButton;
+    @FXML
+    private Button renameAlbumButton;
+    @FXML
+    private Button deleteAlbumButton;
+    @FXML
+    private Button viewAlbumButton;
+    @FXML
+    private Button nextAlbumsButton;
+    @FXML
+    private Button previousAlbumsButton;
 
     private User user;
-
-    /**
-     * Initialize the user session in the controller.
-     * @param user The User object representing the logged-in user.
-     */
+    private List<Album> albums; // This should be populated with actual album data
+    private int albumPageIndex = 0;
+    private static final int ALBUMS_PER_PAGE = 3;
 
     public void initSession(User user) {
-        System.out.println("Initializing user session...");
         this.user = user;
-        updateWelcomeLabel(user);
-        // Load user data like albums and photos if needed
-    }
-
-    /**
-     * Update the welcome label with the user's username.
-     */
-    private void updateWelcomeLabel(User user) {
         welcomeLabel.setText("Welcome, " + user.getUsername() + "!");
+
+        // Dummy data for demonstration
+        albums = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            albums.add(new Album("Album " + i));
+        }
+
+        updateAlbumDisplay();
     }
 
-    // Add methods to handle user actions like creating albums, opening albums, etc.
+    private void updateAlbumDisplay() {
+        albumContainer.getChildren().clear();
+        int start = albumPageIndex * ALBUMS_PER_PAGE;
+        int end = Math.min(start + ALBUMS_PER_PAGE, albums.size());
+        for (int i = start; i < end; i++) {
+            Album album = albums.get(i);
+            Button albumButton = new Button(album.getAlbumName());
+            albumButton.setOnAction(e -> selectAlbum(album));
+            albumContainer.getChildren().add(albumButton);
+        }
+    }
 
-    /**
-     * Handles the action of logging out from the user's session.
-     * @param event The event that triggered the logout action.
-     */
+    private void selectAlbum(Album album) {
+        albumInfoLabel.setText("Album: " + album.getAlbumName() + " - Photos: " + album.getNumPhotos());
+        // Other logic for selecting an album (e.g., storing the selected album)
+    }
+
     @FXML
-    public void handleLogoutButtonAction(ActionEvent event) throws IOException {
-        // Use welcomeLabel to get the Stage
-        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/view/LoginScene.fxml"));
-        stage.setScene(new Scene(root));
-        stage.show();
+    private void handleCreateAlbum() {
+        // Logic to create a new album
+    }
+
+    @FXML
+    private void handleRenameAlbum() {
+        // Logic to rename an album
+    }
+
+    @FXML
+    private void handleDeleteAlbum() {
+        // Logic to delete an album
+    }
+
+    @FXML
+    private void handleViewAlbum() {
+        // Logic to view the selected album (e.g., open a new window)
+    }
+
+    @FXML
+    private void handleNextAlbums() {
+        if ((albumPageIndex + 1) * ALBUMS_PER_PAGE < albums.size()) {
+            albumPageIndex++;
+            updateAlbumDisplay();
+        }
+    }
+
+    @FXML
+    private void handlePreviousAlbums() {
+        if (albumPageIndex > 0) {
+            albumPageIndex--;
+            updateAlbumDisplay();
+        }
     }
 
     // Other methods...
-
-    /**
-     * Handles the action of uploading a photo associated with the logged-in user.
-     * @param event The event that triggered the upload action.
-     */
-    @FXML
-    public void handleUploadPhotoButtonAction(ActionEvent event) {
-        // Implement the logic for uploading a photo associated with the logged-in user
-        // You can use the user object to get the necessary information
-        // For example:
-        // String userId = user.getUserId();
-        // String username = user.getUsername();
-        // ...
-        // Implement the logic to upload the photo here
-    }
 }
-
-    
