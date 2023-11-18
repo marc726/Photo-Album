@@ -29,10 +29,21 @@ public class Photo implements Serializable {
         this.tags = new ArrayList<Tag>();
     }
 
+    public Photo() {
+        this.name = "";
+        this.caption = "";
+        this.date = Calendar.getInstance();
+        this.tags = new ArrayList<Tag>();
+    }
+
 
     //helpers
     public String getName(){
         return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public String getCaption(){

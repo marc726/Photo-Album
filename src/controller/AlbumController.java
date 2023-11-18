@@ -158,7 +158,34 @@ public class AlbumController {
     @FXML
     private void handleCopyPhoto(ActionEvent event) {
         // TODO: Implement the logic to copy a photo to a different album
-        showAlert("Copy Photo", "This feature is not implemented yet.");
+        //showAlert("Copy Photo", "This feature is not implemented yet.");
+        // Get the currently displayed photo
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to copy.");
+            return;
+        }
+
+        // Show a dialog to select the target album
+        ChoiceDialog<Album> dialog = new ChoiceDialog<>(null, user.getAlbums());
+        dialog.setTitle("Copy Photo");
+        dialog.setHeaderText("Select an album to copy the photo to:");
+        Optional<Album> result = dialog.showAndWait();
+
+        // Copy the photo to the target album
+        if (result.isPresent()) {
+            Album targetAlbum = result.get();
+            Photo copiedPhoto = new Photo();
+            copiedPhoto.setName(selectedPhoto.getName());
+            copiedPhoto.setImagePath(selectedPhoto.getImagePath());
+            // Set any other properties that need to be copied...
+            targetAlbum.addPhoto(copiedPhoto);
+            showAlert("Photo Copied", "The photo has been copied to the album: " + targetAlbum.getAlbumName() + ".");
+        } else {
+            showAlert("No Album Selected", "No album was selected. Photo was not copied.");
+        }
     }
 
     @FXML
