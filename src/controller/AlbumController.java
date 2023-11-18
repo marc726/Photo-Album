@@ -18,6 +18,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import model.Album;
 import model.Photo;
+import model.User;
+import util.FileManager;
+import java.util.List;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,10 +37,15 @@ public class AlbumController {
     @FXML
     private Pagination pagination;
     private Album album; // The album you're displaying
+    private User user; // The user that owns the album
+    private List<User> users;
 
     // Initialize with an album
-    public void initData(Album album) {
+    public void initData(Album album, List<User> users, User user) {
         this.album = album;
+        this.user = user;
+        users = FileManager.loadData();
+        this.users = users;
         setupPagination();
     }
 
@@ -104,6 +113,9 @@ public class AlbumController {
                 setupPagination();
                 
                 showAlert("Photo Added", "Photo has been added to the album.");
+                updateUsersList(user);
+                FileManager.saveData(users);
+
             } catch (IOException e) {
                 showAlert("Error", "An error occurred while adding the photo: " + e.getMessage());
             }
@@ -134,5 +146,15 @@ public class AlbumController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void updateUsersList(User updatedUser) {
+        // Replace the old user object with the updated one in the 'users' list
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(updatedUser.getUsername())) {
+                users.set(i, updatedUser);
+                break;
+            }
+        }
     }
 }

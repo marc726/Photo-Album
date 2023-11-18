@@ -90,7 +90,7 @@ public class UserController {
 
             // Get the controller for the AlbumViewScene
             AlbumController albumViewController = loader.getController();
-            albumViewController.initData(selectedAlbum); // Method to initialize data in AlbumViewController
+            albumViewController.initData(selectedAlbum, users , user); // Method to initialize data in AlbumViewController
 
             // Create the new scene and display it in a new window or dialog
             Scene albumViewScene = new Scene(albumViewRoot);
