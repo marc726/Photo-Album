@@ -10,13 +10,23 @@ import java.util.Calendar;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.Album;
 import model.Photo;
 import model.User;
@@ -215,6 +225,32 @@ public class AlbumController {
         showAlert("Photo Removed", "The photo has been removed from the album.");
     }
 
+    @FXML
+    private void handleInspectPhoto(ActionEvent event) {
+        // TODO: Implement the logic to open a new window and display the selected photo
+        // along with its caption, date-time of capture, and all its tags.
+        //showAlert("Not implemented", "Not implemented yet");
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+
+        //load fxml file for photo inspection view
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PhotoScene.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get controller of new window and pass the selected photo
+        PhotoController photoController = loader.getController();
+        photoController.setPhoto(selectedPhoto);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -231,5 +267,48 @@ public class AlbumController {
                 break;
             }
         }
+    }
+
+    @FXML
+    private void handleAddTag(ActionEvent event) {
+        //retrieve selected photo
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to add a tag to.");
+            return;
+        }
+        
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Add Tag");
+        dialog.setHeaderText("Add a new tag to the photo");
+
+        ComboBox<String> tagNameDropdown = new ComboBox<>();
+        tagNameDropdown.getItems().addAll("Person", "Location", "Event", "Food", "Animal", "Other");
+        TextField tagValueField = new TextField();
+
+        //populate diaglog's grid plane
+        GridPane grid = new GridPane();
+        grid.add(new Label("Tag Name:"), 0, 0);
+        grid.add(tagNameDropdown, 1, 0);
+        grid.add(new Label("Tag Value:"), 0, 1);
+        grid.add(tagValueField, 1, 1);
+        dialog.getDialogPane().setContent(grid);
+
+        //Convert the result to a pair when the OK button is clicked
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(tagNameDropdown.getValue(), tagValueField.getText());
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        result.ifPresent(tagNameValue -> {
+            Tag newTag = new Tag(tagNameValue.getKey(), tagNameValue.getValue());
+            selectedPhoto.addTag(newTag);
+
+            updatePhotoView();
+        });
     }
 }

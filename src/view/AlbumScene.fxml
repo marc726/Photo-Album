@@ -16,6 +16,19 @@ fx:controller="controller.AlbumController" minWidth="300" minHeight="300">
                         <MenuItem text="Move Photo" onAction="#handleMovePhoto"/>
                         <MenuItem text="Copy Photo" onAction="#handleCopyPhoto"/>
                         <MenuItem text="Delete Photo" onAction="#handleRemovePhoto"/>
+                        <MenuItem text="Inspect Photo" onAction="#handleInspectPhoto"/>
+                    </items>
+                </Menu>
+                <Menu text="Tags">
+                    <items>
+                        <MenuItem text="Add Tag" onAction="#handleAddTag"/>
+                        <MenuItem text="Delete Tag" onAction="#handleDeleteTag"/>
+                    </items>
+                </Menu>
+                <Menu text="Captions">
+                    <items>
+                        <MenuItem text="Add Caption" onAction="#handleAddCaption"/>
+                        <MenuItem text="Delete Caption" onAction="#handleDeleteCaption"/>
                     </items>
                 </Menu>
             </menus>
