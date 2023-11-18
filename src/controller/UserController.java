@@ -1,17 +1,21 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Album;
 import model.User;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserController {
 
@@ -46,98 +50,55 @@ public class UserController {
         this.user = user;
         welcomeLabel.setText("Welcome, " + user.getUsername() + "!");
 
-        // Dummy data for demonstration
-        albums = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            albums.add(new Album("Album " + i));
+    }
+    @FXML
+    private void handleViewAlbum(ActionEvent event) {
+        
         }
-
-        updateAlbumDisplay();
-    }
-
-    private void updateAlbumDisplay() {
-        albumContainer.getChildren().clear();
-        int start = albumPageIndex * ALBUMS_PER_PAGE;
-        int end = Math.min(start + ALBUMS_PER_PAGE, albums.size());
-        for (int i = start; i < end; i++) {
-            Album album = albums.get(i);
-            Button albumButton = new Button(album.getAlbumName());
-            albumButton.setOnAction(e -> selectAlbum(album));
-            albumContainer.getChildren().add(albumButton);
-        }
-    }
-
-    private void selectAlbum(Album album) {
-        selectedAlbum = album;
-        albumInfoLabel.setText("Album: " + album.getAlbumName() + " - Photos: " + album.getNumPhotos());
-    }
-
+    
     @FXML
     private void handleCreateAlbum() {
-        String albumName = albumNameField.getText();
-        if (albumName.isEmpty()) {
-            // Show error message
-            return;
-        }
-        Album newAlbum = new Album(albumName);
-        albums.add(newAlbum);
-        albumNameField.clear();
-        updateAlbumDisplay();
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Create Album");
+        dialog.setHeaderText("Enter album name:");
+        dialog.setContentText("Album:");
+        Optional<String> result = dialog.showAndWait();
+        Album newAlbum = new Album(result.get());
+        user.getAlbums().add(newAlbum);
     }
 
     @FXML
-    private void handleRenameAlbum() {
-        if (selectedAlbum == null) {
-            // Show error message
-            return;
-        }
-        String newAlbumName = albumNameField.getText();
-        if (newAlbumName.isEmpty()) {
-            // Show error message
-            return;
-        }
-        selectedAlbum.setAlbumName(newAlbumName);
-        albumNameField.clear();
-        updateAlbumDisplay();
+    private void handleRenameAlbum(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Rename Album");
+        dialog.setHeaderText("Enter new album name:");
+        dialog.setContentText("Album:");
+        Optional<String> result = dialog.showAndWait();
+        Album selectedAlbum = (Album) albumContainer.getChildren().stream()
+                .filter(node -> node.getStyleClass().contains("selected"))
+                .findFirst()
+                .get()
+                .getUserData();
+        selectedAlbum.setAlbumName(result.get());
+        albumInfoLabel.setText(selectedAlbum.getAlbumName());
+        
     }
 
     @FXML
-    private void handleDeleteAlbum() {
-        if (selectedAlbum == null) {
-            // Show error message
-            return;
-        }
-        albums.remove(selectedAlbum);
-        selectedAlbum = null;
+    private void handleDeleteAlbum(ActionEvent event) {
+        Album selectedAlbum = (Album) albumContainer.getChildren().stream()
+                .filter(node -> node.getStyleClass().contains("selected"))
+                .findFirst()
+                .get()
+                .getUserData();
+        user.getAlbums().remove(selectedAlbum);
+        albumContainer.getChildren().removeIf(node -> node.getStyleClass().contains("selected"));
         albumInfoLabel.setText("");
-        updateAlbumDisplay();
     }
 
-    @FXML
-    private void handleViewAlbum() {
-        if (selectedAlbum == null) {
-            // Show error message
-            return;
-        }
-        // Open a new window to view the selected album
-        // This depends on how you've set up your application
-    }
 
-    @FXML
-    private void handleNextAlbums() {
-        if ((albumPageIndex + 1) * ALBUMS_PER_PAGE < albums.size()) {
-            albumPageIndex++;
-            updateAlbumDisplay();
-        }
-    }
 
-    @FXML
-    private void handlePreviousAlbums() {
-        if (albumPageIndex > 0) {
-            albumPageIndex--;
-            updateAlbumDisplay();
-        }
-    }
+    
 }
 
         
