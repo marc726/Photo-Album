@@ -150,6 +150,8 @@ public class AlbumController {
             targetAlbum.addPhoto(selectedPhoto);
             showAlert("Photo Moved", "The Photo has been moved to the album: " + targetAlbum.getAlbumName() + ".");
             setupPagination();
+            updateUsersList(user);
+            FileManager.saveData(users);
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not moved.");
         }
@@ -182,6 +184,9 @@ public class AlbumController {
             copiedPhoto.setImagePath(selectedPhoto.getImagePath());
             // Set any other properties that need to be copied...
             targetAlbum.addPhoto(copiedPhoto);
+            setupPagination();
+            updateUsersList(user);
+            FileManager.saveData(users);
             showAlert("Photo Copied", "The photo has been copied to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not copied.");
