@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.PhotoController">
+    <ImageView fx:id="photoImageView" layoutX="50" layoutY="50" fitWidth="400" fitHeight="300" />
+    <Label fx:id="captionLabel" layoutX="50" layoutY="360" prefWidth="400" />
+    <Label fx:id="dateTimeLabel" layoutX="50" layoutY="380" prefWidth="400" />
+    <Label fx:id="tagsLabel" layoutX="50" layoutY="400" prefWidth="400" />
+</AnchorPane>

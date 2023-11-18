@@ -10,6 +10,9 @@ import java.util.Calendar;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
@@ -17,6 +20,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
 import model.User;
@@ -213,6 +217,32 @@ public class AlbumController {
         updateUsersList(user);
         FileManager.saveData(users);
         showAlert("Photo Removed", "The photo has been removed from the album.");
+    }
+
+    @FXML
+    private void handleInspectPhoto(ActionEvent event) {
+        // TODO: Implement the logic to open a new window and display the selected photo
+        // along with its caption, date-time of capture, and all its tags.
+        //showAlert("Not implemented", "Not implemented yet");
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+
+        //load fxml file for photo inspection view
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/PhotoScene.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //get controller of new window and pass the selected photo
+        PhotoController photoController = loader.getController();
+        photoController.setPhoto(selectedPhoto);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     private void showAlert(String title, String content) {
