@@ -196,7 +196,23 @@ public class AlbumController {
     @FXML
     private void handleRemovePhoto(ActionEvent event) {
         // TODO: Implement the logic to delete a photo in an album
-        showAlert("Delete Photo", "This feature is not implemented yet.");
+        //showAlert("Delete Photo", "This feature is not implemented yet.");
+
+        // Get the currently displayed photo
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to remove.");
+            return;
+        }
+
+        // Remove the photo from the album
+        album.getPhotos().remove(selectedPhoto);
+        setupPagination();
+        updateUsersList(user);
+        FileManager.saveData(users);
+        showAlert("Photo Removed", "The photo has been removed from the album.");
     }
 
     private void showAlert(String title, String content) {
