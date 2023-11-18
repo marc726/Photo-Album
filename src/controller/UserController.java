@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,11 +33,14 @@ public class UserController {
     private Button nextAlbumsButton;
     @FXML
     private Button previousAlbumsButton;
+    @FXML
+    private TextField albumNameField;
 
     private User user;
     private List<Album> albums; // This should be populated with actual album data
     private int albumPageIndex = 0;
     private static final int ALBUMS_PER_PAGE = 3;
+    private Album selectedAlbum;
 
     public void initSession(User user) {
         this.user = user;
@@ -64,28 +68,59 @@ public class UserController {
     }
 
     private void selectAlbum(Album album) {
+        selectedAlbum = album;
         albumInfoLabel.setText("Album: " + album.getAlbumName() + " - Photos: " + album.getNumPhotos());
-        // Other logic for selecting an album (e.g., storing the selected album)
     }
 
     @FXML
     private void handleCreateAlbum() {
-        // Logic to create a new album
+        String albumName = albumNameField.getText();
+        if (albumName.isEmpty()) {
+            // Show error message
+            return;
+        }
+        Album newAlbum = new Album(albumName);
+        albums.add(newAlbum);
+        albumNameField.clear();
+        updateAlbumDisplay();
     }
 
     @FXML
     private void handleRenameAlbum() {
-        // Logic to rename an album
+        if (selectedAlbum == null) {
+            // Show error message
+            return;
+        }
+        String newAlbumName = albumNameField.getText();
+        if (newAlbumName.isEmpty()) {
+            // Show error message
+            return;
+        }
+        selectedAlbum.setAlbumName(newAlbumName);
+        albumNameField.clear();
+        updateAlbumDisplay();
     }
 
     @FXML
     private void handleDeleteAlbum() {
-        // Logic to delete an album
+        if (selectedAlbum == null) {
+            // Show error message
+            return;
+        }
+        albums.remove(selectedAlbum);
+        selectedAlbum = null;
+        albumInfoLabel.setText("");
+        updateAlbumDisplay();
     }
 
     @FXML
     private void handleViewAlbum() {
-        // Logic to view the selected album (e.g., open a new window)
+        if (selectedAlbum == null) {
+            // Show error message
+            return;
+        }
+        // Open a new window to view the selected album
+        // This depends on how you've set up your application
     }
 
     @FXML
@@ -103,6 +138,6 @@ public class UserController {
             updateAlbumDisplay();
         }
     }
-
-    // Other methods...
 }
+
+        
