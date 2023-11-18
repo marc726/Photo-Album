@@ -11,6 +11,7 @@ import java.util.Calendar;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.ImageView;
@@ -21,7 +22,7 @@ import model.Photo;
 import model.User;
 import util.FileManager;
 import java.util.List;
-
+import java.util.Optional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -125,7 +126,33 @@ public class AlbumController {
     @FXML
     private void handleMovePhoto(ActionEvent event) {
         // TODO: Implement the logic to move a photo to a different album
-        showAlert("Move Photo", "This feature is not implemented yet.");
+        //showAlert("Move Photo", "This feature is not implemented yet.");
+        //getting selected photo
+        int pageIndex = pagination.getCurrentPageIndex();
+        Photo selectedPhoto = album.getPhotos().get(pageIndex);
+
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to move.");
+            return;
+        }
+
+        //show diaglog box to select album to move to
+        ChoiceDialog<Album> dialog = new ChoiceDialog<Album>(null, user.getAlbums());
+        dialog.setTitle("Move Photo");
+        dialog.setHeaderText("Select an album to move the photo to:");
+        Optional<Album> result = dialog.showAndWait();
+
+        //move photo to selected album
+        if (result.isPresent()) {
+            Album targetAlbum = result.get();
+            pageIndex = pagination.getCurrentPageIndex();
+            selectedPhoto = album.getPhotos().remove(pageIndex);
+            targetAlbum.addPhoto(selectedPhoto);
+            showAlert("Photo Moved", "The Photo has been moved to the album: " + targetAlbum.getAlbumName() + ".");
+            setupPagination();
+        } else {
+            showAlert("No Album Selected", "No album was selected. Photo was not moved.");
+        }
     }
 
     @FXML
