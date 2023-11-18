@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,6 +17,8 @@ import model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 
 public class UserController {
 
@@ -56,6 +59,9 @@ public class UserController {
         
         }
     
+        @FXML
+        private ListView<HBox> albumListView;
+    
     @FXML
     private void handleCreateAlbum() {
         TextInputDialog dialog = new TextInputDialog();
@@ -63,8 +69,21 @@ public class UserController {
         dialog.setHeaderText("Enter album name:");
         dialog.setContentText("Album:");
         Optional<String> result = dialog.showAndWait();
-        Album newAlbum = new Album(result.get());
-        user.getAlbums().add(newAlbum);
+        if (result.isPresent()) {
+            Album newAlbum = new Album(result.get());
+            user.getAlbums().add(newAlbum);
+
+            // Create a new HBox to hold the icon and album name
+            HBox albumItem = new HBox();
+            ImageView folderIcon = new ImageView(new Image("C:\\Users\\bhavy\\OneDrive\\Desktop\\CS211\\photos38\\data\\Icon\\folder_icon.png")); // Replace with your actual folder icon path
+            folderIcon.setFitHeight(20); // Adjust the size as needed
+            folderIcon.setFitWidth(20);
+            Label albumNameLabel = new Label(newAlbum.getAlbumName());
+            albumItem.getChildren().addAll(folderIcon, albumNameLabel);
+
+            // Add the new album to the ListView
+            albumListView.getItems().add(albumItem);
+    }
     }
 
     @FXML
