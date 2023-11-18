@@ -40,9 +40,7 @@ public class Album implements Serializable{
     }
 
     public void addPhoto(Photo photo) {
-        if (!photos.contains(photo)) {
-            photos.add(photo);
-        }
+        this.photos.add(photo);
     }
 
     public void removePhoto(Photo photo) {
@@ -52,6 +50,6 @@ public class Album implements Serializable{
     }
 
     public String toString() {
-        return "NAME: " + albumName + "\nPHOTO COUNT: " + photos.size();
+        return "NAME: " + albumName + "\nPHOTO COUNT: " + photos.size() + "\nDATE:";
     }
 }

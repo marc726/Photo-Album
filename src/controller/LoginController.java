@@ -1,5 +1,6 @@
 /**
- * @author Bhavya Patel
+ * @author Bhavya Patel 
+ * @author Marc Rizolo
  */
 package controller;
 
@@ -13,8 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.User;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+import util.FileManager;
 import java.util.List;
 
 
@@ -33,6 +33,7 @@ public class LoginController {
     @FXML
     private TextField usernameTextField;
 
+    List<User> users;
 
     /**
      * This method handles the login button action.
@@ -43,9 +44,11 @@ public class LoginController {
     @FXML
     public void handleLoginButtonAction(ActionEvent event) {
 
-        List<User> users = loadUsers();
+        
         Stage stage = (Stage) usernameTextField.getScene().getWindow();
-        Parent root;
+        Parent root = null; // Initialize root to null
+
+
 
         if ("admin".equals(usernameTextField.getText())) {
             try {
@@ -54,13 +57,17 @@ public class LoginController {
                 e.printStackTrace();
                 return;
             }
-        } else {
+        }  
+        
+        else{
 
-            if (users == null) {
+            users = FileManager.loadData();
+
+            if (users == null){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Error loading data");
-                alert.setContentText("Error loading data. Please try again.");
+                alert.setContentText("Error loading user data. Please try again.");
                 alert.showAndWait();
                 return;
             }
@@ -73,17 +80,31 @@ public class LoginController {
                 alert.showAndWait();
                 return;
             }
+
+            User loginUser = users.stream()
+                              .filter(user -> user.getUsername().equals(usernameTextField.getText()))
+                              .findFirst()
+                              .orElse(null);
+
+            if (loginUser == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid username");
+                alert.setContentText("The username you entered does not exist. Please try again.");
+                alert.showAndWait();
+                return;
+            }
             
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserDashScene.fxml"));
-                root = loader.load(); // Load the FXML file
-                UserController userController = loader.getController(); // Get the UserController from the loader
-                User user = new User(usernameTextField.getText()); // Create a User object for the session
-                userController.initSession(user); // Pass the User object to the UserController
+                root = loader.load();
+                UserController userController = loader.getController();
+                userController.initSession(loginUser); // Pass the existing User object
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
+
         }
 
         Scene scene = new Scene(root);
@@ -99,21 +120,5 @@ public class LoginController {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
         label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
-    }
-
-    private List<User> loadUsers (){
-        try {
-            FileInputStream fis = new FileInputStream("data/data.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            List<User> users = (List<User>) ois.readObject();
-            ois.close();
-            fis.close();
-            System.out.println("Data loaded successfully");
-            return users;
-        } catch (Exception e) {
-            System.err.println("Error loading data: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
     }
 }

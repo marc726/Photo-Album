@@ -1,5 +1,6 @@
 /**
- * @author Bhavya Patel, Marc Rizzolo
+ * @author Bhavya Patel
+ * @author Marc Rizzolo
  * 
  */
 package controller;
@@ -94,7 +95,7 @@ public class AdminController implements Initializable{
         stage.setScene(new Scene(root));
     }
 
-    private void saveData() {
+    public void saveData() {
         try {
             FileOutputStream fos = new FileOutputStream("data/data.dat");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -118,7 +119,7 @@ public class AdminController implements Initializable{
         users.getItems().addAll(userList);
         ois.close();
         fis.close();
-        System.out.println("Data loaded successfully");
+        System.out.println("Data loaded successfully (called from admin)");
     } catch (Exception e) {
         System.err.println("Error loading data: " + e.getMessage());
         e.printStackTrace();
