@@ -15,6 +15,9 @@ import java.util.Set;
 import model.User;
 
 
+/**
+ * The FileManager class provides methods for saving and loading data, as well as managing tag types.
+ */
 public class FileManager {
 
 
@@ -42,6 +45,12 @@ public class FileManager {
 
 
 
+    /**
+     * Saves the given list of users and set of tag types to a file.
+     * 
+     * @param users    the list of users to be saved
+     * @param tagTypes the set of tag types to be saved
+     */
     public static void saveData(List<User> users, Set<String> tagTypes) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/data.dat"))) {
             oos.writeObject(users);
@@ -58,6 +67,12 @@ public class FileManager {
 
 
 
+    /**
+     * Loads the data from the file "data/data.dat" and returns a list of User objects.
+     * This method also updates the GlobalTags instance with the loaded tag types.
+     * 
+     * @return The list of User objects loaded from the file.
+     */
     @SuppressWarnings("unchecked")
     public static List<User> loadData() {
         List<User> users = null;

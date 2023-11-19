@@ -18,6 +18,10 @@ import model.Photo;
 
 
 
+/**
+ * The SlideshowController class is responsible for controlling the slideshow functionality
+ * and displaying the photos in an album using a pagination control.
+ */
 public class SlideshowController {
     
     @FXML
@@ -25,12 +29,24 @@ public class SlideshowController {
     private Album album; // The album you're displaying
 
 
-    // Initialize with an album
+    
+    /**
+     * Initializes the data for the SlideshowController.
+     * 
+     * @param album the album to be used for initialization
+     */
     public void initData(Album album) {
         this.album = album;
         setupPagination();
     }
 
+    /**
+     * Sets up the pagination for the slideshow.
+     * If the album is not null and contains photos, the page count is set to the number of photos
+     * and the page factory is set to create pages using the createPage method.
+     * If the album is null or does not contain any photos, the page count is set to 1
+     * and the page factory is set to create a default page with a message indicating no photos.
+     */
     private void setupPagination() {
         if (album != null && album.getPhotos() != null && !album.getPhotos().isEmpty()) {
             // Set the page count to the number of photos
@@ -51,6 +67,13 @@ public class SlideshowController {
         }
     }
 
+    /**
+     * Creates a VBox container to hold the image view for a slideshow page.
+     * The VBox is aligned to the center.
+     *
+     * @param pageIndex The index of the photo in the album to display.
+     * @return The created VBox container.
+     */
     private VBox createPage(int pageIndex) {
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER); // Set the alignment of the VBox to center

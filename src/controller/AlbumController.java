@@ -38,6 +38,10 @@ import model.Tag;
 import util.FileManager;
 import util.GlobalTags;
 
+/**
+ * The AlbumController class is responsible for managing the user interface and functionality
+ * related to displaying and manipulating albums and photos.
+ */
 public class AlbumController {
 
     @FXML
@@ -57,6 +61,9 @@ public class AlbumController {
 
 
 
+    /**
+     * Sets up the photo list view by populating it with photos from the album and customizing the appearance of each photo cell.
+     */
     private void setupPhotoListView() {
         photoListView.setItems(FXCollections.observableArrayList(album.getPhotos()));
         photoListView.setCellFactory(new Callback<ListView<Photo>, ListCell<Photo>>() {
@@ -89,6 +96,14 @@ public class AlbumController {
 //                                  PHOTOS
 
 
+    /**
+     * Handles the event when the "Add Photo" button is clicked.
+     * Opens a file chooser dialog to select an image file, then adds the selected photo to the album.
+     * Updates the photo list view, shows a success message, and saves the data.
+     * If an error occurs, shows an error message with the error details.
+     *
+     * @param event The action event triggered by clicking the "Add Photo" button.
+     */
     @FXML
     private void handleAddPhoto(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -118,6 +133,11 @@ public class AlbumController {
 
 
 
+    /**
+     * Handles the action of moving a photo to another album.
+     * 
+     * @param event The event that triggered the action.
+     */
     @FXML
     private void handleMovePhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -147,6 +167,17 @@ public class AlbumController {
 
 
 
+    /**
+     * Handles the action of copying a photo to another album.
+     * If no photo is selected, a warning message is displayed.
+     * The user is prompted to select an album to copy the photo to.
+     * If an album is selected, the photo is copied to the selected album.
+     * The photo list view and user's list are updated accordingly.
+     * The data is saved and a success message is displayed.
+     * If no album is selected, a warning message is displayed.
+     *
+     * @param event The action event that triggered the method.
+     */
     @FXML
     private void handleCopyPhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -178,6 +209,15 @@ public class AlbumController {
 
 
 
+    /**
+     * Handles the action event for removing a photo from the album.
+     * If no photo is selected, a warning message is displayed.
+     * Otherwise, the selected photo is removed from the album, and the photo list view is updated.
+     * The user's list is also updated, and the data is saved to the file system.
+     * Finally, a confirmation message is displayed.
+     *
+     * @param event The action event triggered by the remove photo button.
+     */
     @FXML
     private void handleRemovePhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -196,6 +236,13 @@ public class AlbumController {
 
 
 
+    /**
+     * Handles the action event for inspecting a photo.
+     * Retrieves the selected photo from the photoListView and opens a new window to display the photo.
+     * If no photo is selected, a warning message is displayed.
+     *
+     * @param event The action event triggered by the inspect photo button.
+     */
     @FXML
     private void handleInspectPhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -226,6 +273,15 @@ public class AlbumController {
     //                                 TAGS
 
 
+    /**
+     * Handles the event of adding a tag to a photo.
+     * Retrieves the selected photo from the photoListView and prompts the user to choose a tag type.
+     * Then, prompts the user to enter a tag value for the selected tag type.
+     * Adds the new tag to the selected photo and updates the photoListView.
+     * Saves the updated data to the file system.
+     *
+     * @param event the action event triggered by the user
+     */
     @FXML
     private void handleAddTagToPhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -272,6 +328,11 @@ public class AlbumController {
 
     
 
+    /**
+     * Handles the action of adding a new tag type.
+     * Prompts the user to enter a tag type and adds it to the global tag types.
+     * Saves the updated tag types to the file system.
+     */
     @FXML
     private void handleAddTagType() {
         TextInputDialog dialog = new TextInputDialog();
@@ -291,6 +352,12 @@ public class AlbumController {
 //                                  CAPTIONS
 
 
+    /**
+     * Handles the event when the caption of a photo is changed.
+     * If no photo is selected, it displays an alert message.
+     * Opens a dialog box to allow the user to enter a new caption for the selected photo.
+     * Updates the caption of the selected photo and refreshes the photo list view.
+     */
     @FXML
     private void handleChangeCaption() {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -345,6 +412,13 @@ public class AlbumController {
 //                                  SLIDESHOW
 
 
+    /**
+     * Handles the action event for starting the slideshow.
+     * Loads the SlideshowScene.fxml file, initializes the SlideshowController with the album data,
+     * and displays the scene in a new stage.
+     *
+     * @param event the action event triggered by the user
+     */
     @FXML
     private void handleStartSlideshow(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SlideshowScene.fxml"));
@@ -375,6 +449,12 @@ public class AlbumController {
 //                                  HELPERS
 
 
+    /**
+     * Displays an alert dialog with the specified title and content.
+     *
+     * @param title   the title of the alert dialog
+     * @param content the content of the alert dialog
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -384,6 +464,11 @@ public class AlbumController {
     }
 
     
+    /**
+     * Updates the users list by replacing the user with the same username as the updated user.
+     *
+     * @param updatedUser The updated user object.
+     */
     private void updateUsersList(User updatedUser) {
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername().equals(updatedUser.getUsername())) {
@@ -394,6 +479,12 @@ public class AlbumController {
     }
 
 
+    /**
+     * Sets the date and time for the given photo to the current date and time.
+     * Refreshes the photo list view.
+     *
+     * @param photo The photo for which to set the date and time.
+     */
     private void setDateTime(Photo photo) {
         photo.setDate(LocalDateTime.now());
         photoListView.refresh();

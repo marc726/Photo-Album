@@ -34,6 +34,10 @@ import java.util.Optional;
 import javafx.scene.control.ListView;
 
 
+/**
+ * The UserController class is responsible for controlling the user interface and handling user interactions
+ * related to user management and album operations.
+ */
 public class UserController {
 
     @FXML
@@ -64,6 +68,13 @@ public class UserController {
     private ListView<Album> albumListView; 
 
 
+    /**
+     * Initializes the user session.
+     * Sets the user, updates the welcome label, and populates the album list view.
+     * Loads user data from the file manager.
+     *
+     * @param user The user object representing the current user.
+     */
     public void initSession(User user) {
         this.user = user;
         welcomeLabel.setText("Welcome, " + user.getUsername() + "!");
@@ -72,6 +83,13 @@ public class UserController {
     }
     
 
+    /**
+     * Handles the action event when the user clicks on the "View Album" button.
+     * Retrieves the selected album from the album list view and displays it in a new window.
+     * If no album is selected, an error message is shown to the user.
+     *
+     * @param event The action event triggered by clicking the "View Album" button.
+     */
     @FXML
     private void handleViewAlbum(ActionEvent event) {
         Album selectedAlbum = albumListView.getSelectionModel().getSelectedItem();
@@ -113,6 +131,12 @@ public class UserController {
 
 
 
+    /**
+     * Handles the action of creating a new album.
+     * Prompts the user to enter the name of the album and creates a new album object with the given name.
+     * Adds the new album to the user's album list and updates the ListView.
+     * Finally, updates the user's list, saves the data, and updates the global tag types.
+     */
     @FXML
     private void handleCreateAlbum() {
         TextInputDialog dialog = new TextInputDialog("New Album");
@@ -134,6 +158,13 @@ public class UserController {
     
     
 
+    /**
+     * Handles the action of renaming an album.
+     * Retrieves the selected album from the album list view and prompts the user to enter a new name for the album.
+     * If a new name is provided, updates the album name, refreshes the album list view, and saves the data.
+     * 
+     * @param event The action event that triggered the method.
+     */
     @FXML
     private void handleRenameAlbum(ActionEvent event) {
         Album selectedAlbum = albumListView.getSelectionModel().getSelectedItem();
@@ -155,6 +186,13 @@ public class UserController {
         
     }
 
+    /**
+     * Handles the action of deleting an album.
+     * Removes the selected album from the user's album list and updates the ListView.
+     * Also updates the user's list, saves the data, and updates the global tag types.
+     *
+     * @param event the action event triggered by the delete button
+     */
     @FXML
     private void handleDeleteAlbum(ActionEvent event) {
         Album selectedAlbum = albumListView.getSelectionModel().getSelectedItem();
@@ -167,6 +205,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Handles the action when the logout button is clicked.
+     * This method changes the scene to the login scene.
+     *
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs while loading the login scene
+     */
     @FXML
     private void handleLogoutButtonAction(ActionEvent event) throws Exception {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -177,6 +222,11 @@ public class UserController {
 
 
 
+    /**
+     * Handles the search action event.
+     * Loads the search page, sets up the scene, and initializes data for the search controller.
+     * @param event The action event triggered by the search action.
+     */
     @FXML
     private void handleSearch(ActionEvent event) {
         try {
@@ -206,6 +256,11 @@ public class UserController {
 
     
   
+    /**
+     * Updates the 'users' list by replacing the old user object with the updated one.
+     * 
+     * @param updatedUser The updated user object.
+     */
     private void updateUsersList(User updatedUser) {
         // Replace the old user object with the updated one in the 'users' list
         for (int i = 0; i < users.size(); i++) {

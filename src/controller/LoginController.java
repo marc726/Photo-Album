@@ -35,12 +35,15 @@ public class LoginController {
 
     List<User> users;
 
-    /**
-     * This method handles the login button action.
-     *
-     * @param event The event triggered by the login button.
-     */
     
+    /**
+     * Handles the action when the login button is clicked.
+     * If the username is "admin", it loads the Admin Dashboard scene.
+     * If the username is a valid user, it loads the User Dashboard scene and initializes the session with the user's data.
+     * If the username is invalid or there is an error loading the data, it displays an error message.
+     *
+     * @param event The action event triggered by clicking the login button.
+     */
     @FXML
     public void handleLoginButtonAction(ActionEvent event) {
 
@@ -112,9 +115,12 @@ public class LoginController {
         stage.show();
     }
     
+    
     /**
-     * This method initializes the view and sets the JavaFX and Java version in the label.
-     */
+        * Initializes the LoginController.
+        * This method is automatically called after the FXML file has been loaded.
+        * It sets the text of the label to display the JavaFX and Java versions.
+        */
     @FXML
     public void initialize() {
         String javaVersion = System.getProperty("java.version");

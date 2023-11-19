@@ -34,16 +34,35 @@ import model.User;
 
 
 
+/**
+ * The AdminController class is responsible for managing the admin functionality of the application.
+ * It handles user creation, user deletion, and data persistence.
+ */
 public class AdminController implements Initializable{
 
     @FXML
     private ListView<User> users;
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     * This method is automatically called by the FXMLLoader.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources The resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadData();
     }
 
+    /**
+     * Handles the action when the "Create User" button is clicked.
+     * Prompts the user to enter a username and creates a new user with the entered username.
+     * If the entered username already exists, displays an error message.
+     * Otherwise, adds the new user to the list of users, refreshes the user interface, and saves the data.
+     *
+     * @param event the action event triggered by clicking the "Create User" button
+     */
     @FXML
     public void handleCreateUserButtonAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog();
@@ -68,6 +87,14 @@ public class AdminController implements Initializable{
         });
     }
 
+    /**
+     * Handles the action when the delete user button is clicked.
+     * Deletes the user selected from the listview after displaying a confirmation dialog.
+     * If the user confirms the deletion, the selected user is removed from the listview,
+     * the listview is refreshed, and the data is saved.
+     *
+     * @param event The action event triggered by the delete user button.
+     */
     @FXML
     public void handleDeleteUserButtonAction(ActionEvent event) {
         //delete user selected from listview. add confirmation dialog
@@ -88,6 +115,13 @@ public class AdminController implements Initializable{
         }
     }
 
+    /**
+     * Handles the action when the logout button is clicked.
+     * This method changes the scene to the login scene.
+     *
+     * @param event the action event triggered by the logout button
+     * @throws Exception if an error occurs during scene transition
+     */
     @FXML
     public void handleLogoutButtonAction(ActionEvent event) throws Exception {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -95,6 +129,12 @@ public class AdminController implements Initializable{
         stage.setScene(new Scene(root));
     }
 
+    /**
+     * Saves the data by serializing the list of items in the 'users' object
+     * and writing it to a file named "data.dat".
+     * 
+     * @throws IOException if an I/O error occurs while saving the data
+     */
     public void saveData() {
         try {
             FileOutputStream fos = new FileOutputStream("data/data.dat");
@@ -109,6 +149,11 @@ public class AdminController implements Initializable{
         }
     }
 
+    /**
+     * Loads data from a file and populates the user list.
+     * This method reads serialized objects from the "data/data.dat" file and adds them to the user list.
+     * If an error occurs during the loading process, an error message is printed along with the stack trace.
+     */
     @SuppressWarnings("unchecked")
     private void loadData() {
     try {

@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
 import model.Photo;
 import model.Tag;
 
+/**
+ * The PhotoController class is responsible for controlling the display of a single photo.
+ */
 public class PhotoController {
     @FXML
     private ImageView photoImageView;
@@ -20,6 +23,11 @@ public class PhotoController {
     @FXML
     private Label tagsLabel;
 
+    /**
+     * Sets the photo to be displayed in the controller.
+     *
+     * @param photo The photo object to be displayed.
+     */
     public void setPhoto(Photo photo) {
         // Set the photo image
         Image image = new Image(photo.getImagePath());
