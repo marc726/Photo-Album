@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" 
-fx:controller="controller.AlbumController" minWidth="300" minHeight="300">
+<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AlbumController" minWidth="300" minHeight="300">
     <top>
         <MenuBar>
-            <menus>
-                <Menu text="File">
-                    <items>
-                        <MenuItem text="Add Photo" onAction="#handleAddPhoto"/>
-                        <MenuItem text="Move Photo" onAction="#handleMovePhoto"/>
-                        <MenuItem text="Copy Photo" onAction="#handleCopyPhoto"/>
-                        <MenuItem text="Delete Photo" onAction="#handleRemovePhoto"/>
-                        <MenuItem text="Inspect Photo" onAction="#handleInspectPhoto"/>
-                    </items>
-                </Menu>
-                <Menu text="Tags">
-                    <items>
-                        <MenuItem text="Add Tag" onAction="#handleAddTag"/>
-                    </items>
-                </Menu>
-            </menus>
+            <Menu text="File">
+                <MenuItem text="Add Photo" onAction="#handleAddPhoto"/>
+                <MenuItem text="Move Photo" onAction="#handleMovePhoto"/>
+                <MenuItem text="Copy Photo" onAction="#handleCopyPhoto"/>
+                <MenuItem text="Delete Photo" onAction="#handleRemovePhoto"/>
+                <MenuItem text="Inspect Photo" onAction="#handleInspectPhoto"/>
+            </Menu>
+            <Menu text="Tags">
+                <MenuItem text="Add Tag" onAction="#handleAddTag"/>
+            </Menu>
         </MenuBar>
     </top>
     <center>
-        <Pagination fx:id="pagination" />
+        <ListView fx:id="photoListView"/> <!-- Replace Pagination with ListView -->
     </center>
 </BorderPane>
