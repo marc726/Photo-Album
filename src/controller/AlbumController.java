@@ -314,7 +314,13 @@ public class AlbumController {
                 if (tagValueResult.isPresent()) {
                     String tagValue = tagValueResult.get();
                     Tag newTag = new Tag(tagType, tagValue);
-                    selectedPhoto.addTag(newTag);
+
+                    // Check if the tag already exists
+                    if (selectedPhoto.getTags().contains(newTag)) {
+                        showAlert("Duplicate Tag", "This photo already has a tag with the same name and value.");
+                    } else {
+                        selectedPhoto.addTag(newTag);
+                    }
                 } else {
                     break; // Exit the loop if the user cancels
                 }
