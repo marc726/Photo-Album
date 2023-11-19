@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
@@ -28,10 +29,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
+
 import model.Album;
 import model.Photo;
 import model.User;
@@ -253,6 +256,54 @@ public class AlbumController {
             FileManager.saveData(users);
         });
     }
+
+    @FXML
+    private void handleChangeCaption() {
+        Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to change the caption of.");
+            return;
+        }
+        
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Change Caption");
+        dialog.setHeaderText("Change the caption of the photo");
+
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        TextField captionField = new TextField();
+        captionField.setText(selectedPhoto.getCaption()); // Pre-fill with current caption
+
+        GridPane grid = new GridPane();
+        grid.add(new Label("Caption:"), 0, 0);
+        grid.add(captionField, 1, 0);
+        dialog.getDialogPane().setContent(grid);
+
+        // Enable/Disable OK button depending on whether a caption was entered.
+        Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setDisable(true);
+
+        captionField.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                return captionField.getText();
+            }
+            return null;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(caption -> {
+            selectedPhoto.setCaption(caption);
+            updateUsersList(user);
+            FileManager.saveData(users);
+        });
+    }
+
 
 
 
