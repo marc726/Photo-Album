@@ -1,3 +1,7 @@
+/**
+ * @author Marc Rizzolo
+ */
+
 package controller;
 
 import javafx.collections.FXCollections;
@@ -8,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -20,7 +23,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.Node;
 import model.Album;
 import model.Photo;
-import model.Tag;
 import model.User;
 import util.FileManager;
 import util.GlobalTags;
@@ -44,7 +46,7 @@ public class SearchController {
     @FXML
     private VBox tagSearchVBox;
 
-    private List<User> users; // Assuming you have a list of users with their photos
+    private List<User> users; 
     private User user;
 
     public void initData(List<User> users, User user) {
@@ -186,7 +188,6 @@ public class SearchController {
         result.ifPresent(albumName -> {
             Album newAlbum = new Album(albumName);
             newAlbum.getPhotos().addAll(selectedPhotos);
-            // Assuming you have a method to add the new album to the user's albums
             addUserAlbum(newAlbum);
             showAlert("Album Created", "A new album has been created with the selected photos.");
         });
@@ -235,7 +236,6 @@ public class SearchController {
     @FXML
     private void handleClearSearch(ActionEvent event) {
         photoListView.setItems(FXCollections.observableArrayList());  // Clear the ListView
-        // Optionally, reset other search-related fields if necessary
     }
 }
 

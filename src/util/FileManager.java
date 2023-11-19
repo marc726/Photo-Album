@@ -17,15 +17,20 @@ import model.User;
 
 public class FileManager {
 
+
+    // Define a private static set to store tag types
     private static Set<String> tagTypes = new HashSet<>();
 
+    // Method to get the tag types
     public static Set<String> getTagTypes() {
         return tagTypes;
     }
 
+    // Method to set the tag types
     public static void setTagTypes(Set<String> tags) {
         tagTypes = tags;
     }
+
    
 
 

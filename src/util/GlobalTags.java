@@ -1,3 +1,7 @@
+/**
+ * @author Marc Rizzolo
+ */
+
 package util;
 
 import java.util.HashSet;
@@ -8,25 +12,25 @@ public class GlobalTags {
     private Set<String> tagTypes;
 
     private GlobalTags() {
-        tagTypes = new HashSet<>();
+        tagTypes = new HashSet<>(); // Initialize the tagTypes set
     }
 
     public static synchronized GlobalTags getInstance() {
         if (instance == null) {
-            instance = new GlobalTags();
+            instance = new GlobalTags(); // Create a new instance if it doesn't exist
         }
-        return instance;
+        return instance; // Return the instance
     }
 
     public Set<String> getTagTypes() {
-        return tagTypes;
+        return tagTypes; // Return the tagTypes set
     }
 
     public void setTagTypes(Set<String> tagTypes) {
-        this.tagTypes = tagTypes;
+        this.tagTypes = tagTypes; // Set the tagTypes set
     }
 
     public void addTagType(String tagType) {
-        tagTypes.add(tagType);
+        tagTypes.add(tagType); // Add a new tagType to the tagTypes set
     }
 }

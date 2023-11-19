@@ -99,7 +99,6 @@ public class UserController {
             albumStage.setTitle("Album View");
             albumStage.setScene(albumViewScene);
 
-            // Optional: Set the parent stage modality if you want to block input to other windows
             albumStage.initModality(Modality.WINDOW_MODAL);
             albumStage.initOwner(((Node) event.getSource()).getScene().getWindow());
 
@@ -198,7 +197,6 @@ public class UserController {
             SearchController searchController = loader.getController();
             searchController.initData(users, user);
 
-            // Show the updated stage
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
