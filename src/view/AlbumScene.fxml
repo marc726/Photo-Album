@@ -22,13 +22,6 @@ fx:controller="controller.AlbumController" minWidth="300" minHeight="300">
                 <Menu text="Tags">
                     <items>
                         <MenuItem text="Add Tag" onAction="#handleAddTag"/>
-                        <MenuItem text="Delete Tag" onAction="#handleDeleteTag"/>
-                    </items>
-                </Menu>
-                <Menu text="Captions">
-                    <items>
-                        <MenuItem text="Add Caption" onAction="#handleAddCaption"/>
-                        <MenuItem text="Delete Caption" onAction="#handleDeleteCaption"/>
                     </items>
                 </Menu>
             </menus>

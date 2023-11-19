@@ -19,6 +19,7 @@ public class Photo implements Serializable {
     private Calendar date;
     // private Image image;
     private String imagePath;
+    
 
 
     public Photo(String name, Calendar date){
@@ -68,5 +69,11 @@ public class Photo implements Serializable {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void addTag(Tag tag){
+        if (!tags.contains(tag)){
+            tags.add(tag);
+        }
     }
 }

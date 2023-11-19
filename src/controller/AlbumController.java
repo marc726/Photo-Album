@@ -28,8 +28,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.Album;
 import model.Photo;
+import model.Tag;
 import model.User;
 import util.FileManager;
 import java.util.List;
@@ -309,7 +312,8 @@ public class AlbumController {
             Tag newTag = new Tag(tagNameValue.getKey(), tagNameValue.getValue());
             selectedPhoto.addTag(newTag);
 
-            updatePhotoView();
+            updateUsersList(user);
+            FileManager.saveData(users);
         });
     }
 }
