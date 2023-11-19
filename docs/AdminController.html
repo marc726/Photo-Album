@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AdminController Documentation</title>
+</head>
+<body>
+
+<h1>AdminController</h1>
+
+<p>The AdminController class is responsible for managing the admin functionality of the application.
+It handles user creation, user deletion, and data persistence.</p>
+
+<h2>Methods</h2>
+
+<h3>initialize(URL location, ResourceBundle resources)</h3>
+<p>Initializes the controller after its root element has been completely processed.
+This method is automatically called by the FXMLLoader.</p>
+
+<h3>handleCreateUserButtonAction(ActionEvent event)</h3>
+<p>Handles the action when the "Create User" button is clicked.
+Prompts the user to enter a username and creates a new user with the entered username.
+If the entered username already exists, displays an error message.
+Otherwise, adds the new user to the list of users, refreshes the user interface, and saves the data.</p>
+
+<h3>handleDeleteUserButtonAction(ActionEvent event)</h3>
+<p>Handles the action when the delete user button is clicked.
+Deletes the user selected from the listview after displaying a confirmation dialog.
+If the user confirms the deletion, the selected user is removed from the listview,
+the listview is refreshed, and the data is saved.</p>
+
+<h3>handleLogoutButtonAction(ActionEvent event)</h3>
+<p>Handles the action when the logout button is clicked.
+This method changes the scene to the login scene.</p>
+
+<h3>saveData()</h3>
+<p>Saves the data by serializing the list of items in the 'users' object
+and writing it to a file named "data.dat".</p>
+
+<h3>loadData()</h3>
+<p>Loads data from a file and populates the user list.
+This method reads serialized objects from the "data/data.dat" file and adds them to the user list.
+If an error occurs during the loading process, an error message is printed along with the stack trace.</p>
+
+</body>
+</html>

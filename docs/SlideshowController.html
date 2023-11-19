@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SlideshowController Documentation</title>
+</head>
+<body>
+
+<h1>SlideshowController</h1>
+
+<p>The SlideshowController class is responsible for managing the user interface and functionality related to displaying a slideshow of photos.</p>
+
+<h2>Methods</h2>
+
+<h3>setupPagination()</h3>
+<p>Sets up the pagination for the slideshow. If the album is not null and contains photos, the page count is set to the number of photos and the page factory is set to create pages using the createPage method. If the album is null or does not contain any photos, the page count is set to 1 and the page factory is set to create a default page with a message indicating no photos.</p>
+
+<h3>createPage(int pageIndex)</h3>
+<p>Creates a VBox container to hold the image view for a slideshow page. The VBox is aligned to the center. The index of the photo in the album to display is passed as a parameter. The method returns the created VBox container.</p>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AlbumController Documentation</title>
+</head>
+<body>
+
+<h1>AlbumController</h1>
+
+<p>The AlbumController class is responsible for managing the user interface and functionality related to displaying and manipulating albums and photos.</p>
+
+<h2>Fields</h2>
+
+<ul>
+    <li>photoListView: ListView of Photo</li>
+    <li>album: Album</li>
+    <li>user: User</li>
+    <li>users: List of User</li>
+</ul>
+
+<h2>Methods</h2>
+
+<h3>initData(Album album, List<User> users, User user)</h3>
+<p>Initializes the AlbumController with an album, users list, and user. Sets up the photo list view.</p>
+
+<h3>setupPhotoListView()</h3>
+<p>Sets up the photo list view by populating it with photos from the album and customizing the appearance of each photo cell.</p>
+
+<h3>handleAddPhoto(ActionEvent event)</h3>
+<p>Handles the event when the "Add Photo" button is clicked. Opens a file chooser dialog to select an image file, then adds the selected photo to the album. Updates the photo list view, shows a success message, and saves the data. If an error occurs, shows an error message with the error details.</p>
+
+<h3>handleMovePhoto(ActionEvent event)</h3>
+<p>Handles the action of moving a photo to another album. If no photo is selected, a warning message is displayed. The user is prompted to select an album to move the photo to. If an album is selected, the photo is moved to the selected album. The photo list view and user's list are updated accordingly. The data is saved and a success message is displayed. If no album is selected, a warning message is displayed.</p>
+
+<h3>handleCopyPhoto(ActionEvent event)</h3>
+<p>Handles the action of copying a photo to another album. If no photo is selected, a warning message is displayed. The user is prompted to select an album to copy the photo to. If an album is selected, the photo is copied to the selected album. The photo list view and user's list are updated accordingly. The data is saved and a success message is displayed. If no album is selected, a warning message is displayed.</p>
+
+<h3>handleRemovePhoto(ActionEvent event)</h3>
+<p>Handles the action of removing a photo from the album. If no photo is selected, a warning message is displayed. If a photo is selected, the user is prompted to confirm the deletion. If the user confirms the deletion, the photo is removed from the album. The photo list view and user's list are updated accordingly. The data is saved and a success message is displayed.</p>
+
+<h3>handleInspectPhoto(ActionEvent event)</h3>
+<p>Handles the action of inspecting a photo. If no photo is selected, a warning message is displayed. If a photo is selected, the photo is opened in a new window.</p>
+
+<h3>handleAddTagToPhoto(ActionEvent event)</h3>
+<p>Handles the event of adding a tag to a photo.
+    Retrieves the selected photo from the photoListView and prompts the user to choose a tag type.
+    Then, prompts the user to enter a tag value for the selected tag type.
+    Adds the new tag to the selected photo and updates the photoListView.
+    Saves the updated data to the file system.</p>
+
+<h3>handleAddTagType()</h3>
+<p>Handles the action of adding a new tag type.
+    Prompts the user to enter a tag type and adds it to the global tag types.
+    Saves the updated tag types to the file system.</p>
+
+<h3>handleChangeCaption()</h3>
+<p>Handles the event when the caption of a photo is changed.
+    If no photo is selected, it displays an alert message.
+    Opens a dialog box to allow the user to enter a new caption for the selected photo.
+    Updates the caption of the selected photo and refreshes the photo list view.</p>
+
+<h3>handleStartSlideshow(ActionEvent event)</h3>
+<p>Handles the action event for starting the slideshow.
+    Loads the SlideshowScene.fxml file, initializes the SlideshowController with the album data,
+    and displays the scene in a new stage.</p>
+
+<h3>showAlert(String title, String content)</h3>
+<p>Displays an alert dialog with the specified title and content.</p>
+
+<h3>updateUsersList(User updatedUser)</h3>
+<p>Updates the users list by replacing the user with the same username as the updated user.</p>
+
+<h3>setDateTime(Photo photo)</h3>
+<p>Sets the date and time for the given photo to the current date and time.
+    Refreshes the photo list view.</p>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Documentation</title>
+</head>
+<body>
+
+<h1>Photo</h1>
+
+<p>The Photo class represents a photo with attributes. It implements Serializable.</p>
+
+<h2>Fields</h2>
+
+<ul>
+    <li>tags: ArrayList&lt;Tag&gt;</li>
+    <li>name: String</li>
+    <li>caption: String</li>
+    <li>date: LocalDateTime</li>
+    <li>imagePath: String</li>
+</ul>
+
+<h2>Methods</h2>
+
+<h3>Photo(String name, LocalDateTime date)</h3>
+<p>Constructor that initializes the photo with the given name and date, an empty caption, and an empty list of tags.</p>
+
+<h3>Photo()</h3>
+<p>Default constructor that initializes the photo with an empty name and caption, the current date and time, and an empty list of tags.</p>
+
+<h3>getName()</h3>
+<p>Returns the name of the photo.</p>
+
+<h3>setName(String name)</h3>
+<p>Sets the name of the photo.</p>
+
+<h3>getCaption()</h3>
+<p>Returns the caption of the photo.</p>
+
+<h3>setCaption(String caption)</h3>
+<p>Sets the caption of the photo.</p>
+
+<h3>getDate()</h3>
+<p>Returns the date of the photo.</p>
+
+<h3>setDate(LocalDateTime date)</h3>
+<p>Sets the date of the photo.</p>
+
+<h3>getTags()</h3>
+<p>Returns the list of tags of the photo.</p>
+
+<h3>getImagePath()</h3>
+<p>Returns the image path of the photo.</p>
+
+<h3>setImagePath(String imagePath)</h3>
+<p>Sets the image path of the photo.</p>
+
+<h3>addTag(Tag tag)</h3>
+<p>Adds a tag to the photo if it does not already exist.</p>
+
+</body>
+</html>

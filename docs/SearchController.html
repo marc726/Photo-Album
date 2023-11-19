@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SearchController Documentation</title>
+</head>
+<body>
+
+<h1>SearchController</h1>
+
+<p>The SearchController class is responsible for managing the user interface and functionality related to searching for photos.</p>
+
+<h2>Methods</h2>
+
+<h3>initData(List<User> users, User user)</h3>
+    <p>Initializes the data for the SearchController.</p>
+
+<h3>setupPhotoListView()</h3>
+<p>Sets up the photo list view by configuring the cell factory to display photos as thumbnails.</p>
+
+<h3>handleSearchByDateRange()</h3>
+<p>Handles the search by date range functionality.
+    Retrieves the start and end dates from the date pickers,
+    validates the date range, and performs a search for photos
+    within that range. The search results are then displayed
+    in the photo list view.</p>
+
+<h3>searchPhotosByDateRange(LocalDate startDate, LocalDate endDate)</h3>
+<p>Searches for photos within a specified date range.</p>
+
+<h3>handleSearchByTag()</h3>
+<p>Handles the search by tag functionality.
+    Retrieves the tag type and value from the input fields.
+    If the tag type or value is empty, displays an error message.
+    Otherwise, performs a search for photos based on the provided tag type and value.
+    Updates the photo list view with the search results.</p>
+
+<h3>searchPhotosByTag(String tagType, String tagValue)</h3>
+<p>Searches for photos based on a specific tag.</p>
+
+<h3>handleAndSearch()</h3>
+<p>Handles the "And" search operation by retrieving the tag values from the input fields,
+    performing a search based on the provided tag values, and displaying the results in the photo list view.
+    If any of the tag fields are empty, an alert is shown indicating that both tag types and values should be entered.</p>
+
+<h3>handleOrSearch()</h3>
+<p>Handles the "Or" search functionality.
+    Retrieves the tag types and values from the input fields.
+    Performs a search for photos that match either of the tag types and values.
+    Displays the search results in the photo list view.
+    If any of the tag fields are empty, displays an error message.</p>
+
+<h3>handleCreateAlbumFromResults()</h3>
+<p>Handles the action of creating a new album from the selected photos.
+    If no photos are selected, a warning message is displayed.
+    Prompts the user to enter the name of the new album.
+    Creates a new album with the entered name and adds the selected photos to it.
+    Adds the new album to the user's album collection.
+    Displays a success message after the album is created.</p>
+
+<h3>showAlert(String title, String content)</h3>
+<p>Displays an alert dialog with the specified title and content.</p>
+
+<h3>addUserAlbum(Album newAlbum)</h3>
+<p>Adds a new album to the user's collection.</p>
+
+<h3>updateUsersList(User updatedUser)</h3>
+<p>Updates the users list by replacing the user with the specified updated user.</p>
+
+<h3>handleBackToDashboard(ActionEvent event)</h3>
+<p>Handles the action event when the user clicks on the "Back to Dashboard" button.
+    It loads the UserDashScene.fxml file and sets it as the scene for the current stage.
+    If an IOException occurs while loading the file, it prints the stack trace.</p>
+
+<h3>handleClearSearch(ActionEvent event)</h3>
+<p>Clears the search results in the ListView.</p>
+</body>
+</html>

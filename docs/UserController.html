@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserController Documentation</title>
+</head>
+<body>
+
+<h1>UserController</h1>
+
+<p>The UserController class is responsible for managing the user interface and functionality related to user operations.</p>
+
+<h2>Methods</h2>
+
+<h3>initSession(User user)</h3>
+<p>Initializes the user session.
+    Sets the user, updates the welcome label, and populates the album list view.
+    Loads user data from the file manager.</p>
+
+<h3>handleViewAlbum(ActionEvent event)</h3>
+<p>Handles the action event when the user clicks on the "View Album" button.
+    Retrieves the selected album from the album list view and displays it in a new window.
+    If no album is selected, an error message is shown to the user.</p>
+
+<h3>handleCreateAlbum()</h3>
+<p>Handles the action of creating a new album.
+    Prompts the user to enter the name of the album and creates a new album object with the given name.
+    Adds the new album to the user's album list and updates the ListView.
+    Finally, updates the user's list, saves the data, and updates the global tag types.</p>
+
+<h3>handleRenameAlbum(ActionEvent event)</h3>
+<p>Handles the action of renaming an album.
+    Retrieves the selected album from the album list view and prompts the user to enter a new name for the album.
+    If a new name is provided, updates the album name, refreshes the album list view, and saves the data.</p>
+
+<h3>handleDeleteAlbum(ActionEvent event)</h3>
+<p>Handles the action of deleting an album.
+    Removes the selected album from the user's album list and updates the ListView.
+    Also updates the user's list, saves the data, and updates the global tag types.</p>
+
+<h3>handleLogoutButtonAction(ActionEvent event)</h3>
+<p>Handles the action when the logout button is clicked.
+    This method changes the scene to the login scene.</p>
+
+<h3>handleSearch(ActionEvent event)</h3>
+<p>Handles the search action event.
+    Loads the search page, sets up the scene, and initializes data for the search controller.</p>
+
+<h3>updateUsersList(User updatedUser)</h3>
+<p>Updates the 'users' list by replacing the old user object with the updated one.</p>
+
+
+
+</body>
+</html>
