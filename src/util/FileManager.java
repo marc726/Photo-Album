@@ -8,29 +8,45 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import model.User;
 
 
 public class FileManager {
 
+    private static Set<String> tagTypes = new HashSet<>();
 
+    public static Set<String> getTagTypes() {
+        return tagTypes;
+    }
+
+    public static void setTagTypes(Set<String> tags) {
+        tagTypes = tags;
+    }
    
 
-    public static void saveData(List<User> users) {
-        try {
-            FileOutputStream fos = new FileOutputStream("data/data.dat");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+
+
+
+
+
+
+
+
+    public static void saveData(List<User> users, Set<String> tagTypes) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/data.dat"))) {
             oos.writeObject(users);
-            oos.close();
-            fos.close();
-            System.out.println("Data saved successfully");
+            oos.writeObject(tagTypes); // Save the tags along with the users
         } catch (IOException e) {
             System.err.println("Error saving data: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
        
     
@@ -38,17 +54,12 @@ public class FileManager {
 
 
     @SuppressWarnings("unchecked")
-    public static List<User> loadData () {
-        List<User> users = new ArrayList<User>();
-        try {
-            FileInputStream fis = new FileInputStream("data/data.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            List<User> userList = (List<User>) ois.readObject();
-            users.clear();
-            users.addAll(userList);
-            ois.close();
-            fis.close();
-            System.out.println("Data loaded successfully(called from filemanager)");
+    public static List<User> loadData() {
+        List<User> users = null;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("data/data.dat"))) {
+            users = (List<User>) ois.readObject();
+            Set<String> loadedTagTypes = (Set<String>) ois.readObject(); // Load the tags
+            GlobalTags.getInstance().setTagTypes(loadedTagTypes); // Update the GlobalTags instance
         } catch (Exception e) {
             System.err.println("Error loading data: " + e.getMessage());
             e.printStackTrace();

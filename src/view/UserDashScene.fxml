@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane fx:controller="controller.UserController" maxHeight="-Infinity" maxWidth="-Infinity" 
-minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Button onAction="#handleViewAlbum" layoutX="250.0" layoutY="331.0" mnemonicParsing="false" text="View" />
-      <Button onAction="#handleCreateAlbum" layoutX="204.0" layoutY="298.0" mnemonicParsing="false" text="Create" />
-      <Button onAction="#handleRenameAlbum" layoutX="274.0" layoutY="298.0" mnemonicParsing="false" text="Rename" />
-      <Button onAction="#handleDeleteAlbum" layoutX="351.0" layoutY="298.0" mnemonicParsing="false" text="Delete" />
-      <Button onAction="#handleLogoutButtonAction" layoutX="300.0" layoutY="331.0" mnemonicParsing="false" text="Logout" />
-      <ListView fx:id="albumListView" layoutX="124.0" layoutY="44.0" prefHeight="200.0" prefWidth="340.0" />
-      <Label fx:id="welcomeLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="257.0" text="Welcome, " />
-   </children>
+minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <!-- First Row of Buttons -->
+        <Button onAction="#handleCreateAlbum" layoutX="100.0" layoutY="250.0" mnemonicParsing="false" text="Create" />
+        <Button onAction="#handleRenameAlbum" layoutX="250.0" layoutY="250.0" mnemonicParsing="false" text="Rename" />
+        <Button onAction="#handleDeleteAlbum" layoutX="400.0" layoutY="250.0" mnemonicParsing="false" text="Delete" />
+
+        <!-- Second Row of Buttons -->
+        <Button onAction="#handleViewAlbum" layoutX="100.0" layoutY="300.0" mnemonicParsing="false" text="View" />
+        <Button onAction="#handleSearch" layoutX="250.0" layoutY="300.0" mnemonicParsing="false" text="Search" />
+        <Button onAction="#handleLogoutButtonAction" layoutX="400.0" layoutY="300.0" mnemonicParsing="false" text="Logout" />
+
+        <!-- Other Controls -->
+        <ListView fx:id="albumListView" layoutX="124.0" layoutY="44.0" prefHeight="200.0" prefWidth="340.0" />
+        <Label fx:id="welcomeLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="257.0" text="Welcome, " />
+    </children>
 </AnchorPane>

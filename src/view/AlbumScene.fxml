@@ -6,7 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AlbumController" minWidth="300" minHeight="300">
     <top>
         <MenuBar>
-            <Menu text="File">
+            <Menu text="Photo">
                 <MenuItem text="Add Photo" onAction="#handleAddPhoto"/>
                 <MenuItem text="Move Photo" onAction="#handleMovePhoto"/>
                 <MenuItem text="Copy Photo" onAction="#handleCopyPhoto"/>
@@ -14,7 +14,14 @@
                 <MenuItem text="Inspect Photo" onAction="#handleInspectPhoto"/>
             </Menu>
             <Menu text="Tags">
-                <MenuItem text="Add Tag" onAction="#handleAddTag"/>
+                <MenuItem text="Add Tag to Picture" onAction="#handleAddTagToPhoto"/>
+                <MenuItem text="Add Tag Type" onAction="#handleAddTagType"/>
+            </Menu>
+            <Menu text="Captions">
+                <MenuItem text="Change Caption" onAction="#handleChangeCaption"/>
+            </Menu>
+            <Menu text="Slideshow">
+                <MenuItem text="Start Slideshow" onAction="#handleStartSlideshow"/>
             </Menu>
         </MenuBar>
     </top>

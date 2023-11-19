@@ -2,13 +2,10 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -20,12 +17,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -33,13 +30,13 @@ import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Pair;
 
 import model.Album;
 import model.Photo;
 import model.User;
 import model.Tag;
 import util.FileManager;
+import util.GlobalTags;
 
 public class AlbumController {
 
@@ -57,6 +54,8 @@ public class AlbumController {
         this.users = users;
         setupPhotoListView();
     }
+
+
 
     private void setupPhotoListView() {
         photoListView.setItems(FXCollections.observableArrayList(album.getPhotos()));
@@ -85,6 +84,11 @@ public class AlbumController {
         });
     }
 
+
+// --------------------------------------------------------------------------------------------
+//                                  PHOTOS
+
+
     @FXML
     private void handleAddPhoto(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -94,13 +98,9 @@ public class AlbumController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             try {
-                Path destDir = Paths.get("data/pics");
-                Files.createDirectories(destDir);
-                Path destPath = destDir.resolve(file.getName());
-                Files.copy(file.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
-                String imagePath = destPath.toUri().toString();
+                String imagePath = file.toURI().toString();
 
-                Photo newPhoto = new Photo(file.getName(), Calendar.getInstance());
+                Photo newPhoto = new Photo(file.getName(), LocalDateTime.now());
                 newPhoto.setImagePath(imagePath);
 
                 album.addPhoto(newPhoto);
@@ -108,15 +108,15 @@ public class AlbumController {
 
                 showAlert("Photo Added", "Photo has been added to the album.");
                 updateUsersList(user);
-                FileManager.saveData(users);
-            } catch (IOException e) {
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            } catch (Exception e) {
                 showAlert("Error", "An error occurred while adding the photo: " + e.getMessage());
             }
         }
     }
 
-    // Other event handlers like handleMovePhoto, handleCopyPhoto, handleRemovePhoto, etc.
-    // Implement these methods similarly, updating the photo list and refreshing the ListView as needed.
+
+
 
     @FXML
     private void handleMovePhoto(ActionEvent event) {
@@ -138,12 +138,13 @@ public class AlbumController {
             targetAlbum.addPhoto(selectedPhoto);
             setupPhotoListView();
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
             showAlert("Photo Moved", "The photo has been moved to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not moved.");
         }
     }  
+
 
 
     @FXML
@@ -162,17 +163,19 @@ public class AlbumController {
 
         if (result.isPresent()) {
             Album targetAlbum = result.get();
-            Photo copiedPhoto = new Photo(selectedPhoto.getName(), (Calendar)selectedPhoto.getDate().clone());
+            Photo copiedPhoto = new Photo(selectedPhoto.getName(), LocalDateTime.now());
             copiedPhoto.setImagePath(selectedPhoto.getImagePath());
             targetAlbum.addPhoto(copiedPhoto);
             setupPhotoListView();
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
             showAlert("Photo Copied", "The photo has been copied to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not copied.");
         }
+        
     }
+
 
 
     @FXML
@@ -187,9 +190,11 @@ public class AlbumController {
         album.getPhotos().remove(selectedPhoto);
         setupPhotoListView();
         updateUsersList(user);
-        FileManager.saveData(users);
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
         showAlert("Photo Removed", "The photo has been removed from the album.");
     }
+
+
 
     @FXML
     private void handleInspectPhoto(ActionEvent event) {
@@ -217,45 +222,74 @@ public class AlbumController {
         stage.show();
     }
 
+    //------------------------------------------------------------------------------------
+    //                                 TAGS
+
+
     @FXML
-    private void handleAddTag(ActionEvent event) {
+    private void handleAddTagToPhoto(ActionEvent event) {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
         if (selectedPhoto == null) {
             showAlert("No Photo Selected", "Please select a photo to add a tag to.");
             return;
         }
-        
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Add Tag");
-        dialog.setHeaderText("Add a new tag to the photo");
 
-        ComboBox<String> tagNameDropdown = new ComboBox<>();
-        tagNameDropdown.getItems().addAll("Person", "Location", "Event", "Food", "Animal", "Other");
-        TextField tagValueField = new TextField();
+        GlobalTags globalTags = GlobalTags.getInstance();
+        Set<String> tagTypes = globalTags.getTagTypes();
 
-        GridPane grid = new GridPane();
-        grid.add(new Label("Tag Name:"), 0, 0);
-        grid.add(tagNameDropdown, 1, 0);
-        grid.add(new Label("Tag Value:"), 0, 1);
-        grid.add(tagValueField, 1, 1);
-        dialog.getDialogPane().setContent(grid);
+        if (tagTypes.isEmpty()) {
+            showAlert("No Tag Types Available", "Please add a tag type first.");
+            return;
+        }
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return new Pair<>(tagNameDropdown.getValue(), tagValueField.getText());
+        ChoiceDialog<String> tagTypeDialog = new ChoiceDialog<>(null, tagTypes);
+        tagTypeDialog.setTitle("Select Tag Type");
+        tagTypeDialog.setHeaderText("Choose a tag type:");
+
+        Optional<String> tagTypeResult = tagTypeDialog.showAndWait();
+        tagTypeResult.ifPresent(tagType -> {
+            while (true) {
+                TextInputDialog tagValueDialog = new TextInputDialog();
+                tagValueDialog.setTitle("Add Tag");
+                tagValueDialog.setHeaderText("Add tag value for " + tagType);
+                tagValueDialog.setContentText("Enter tag value (Cancel to stop):");
+
+                Optional<String> tagValueResult = tagValueDialog.showAndWait();
+                if (tagValueResult.isPresent()) {
+                    String tagValue = tagValueResult.get();
+                    Tag newTag = new Tag(tagType, tagValue);
+                    selectedPhoto.addTag(newTag);
+                } else {
+                    break; // Exit the loop if the user cancels
+                }
             }
-            return null;
-        });
-
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-        result.ifPresent(tagNameValue -> {
-            Tag newTag = new Tag(tagNameValue.getKey(), tagNameValue.getValue());
-            selectedPhoto.addTag(newTag);
-
+            photoListView.refresh();
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
         });
     }
+
+
+    
+
+    @FXML
+    private void handleAddTagType() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Tag Type");
+        dialog.setHeaderText("Create a new tag type");
+        dialog.setContentText("Enter tag type:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(tagType -> {
+            GlobalTags.getInstance().addTagType(tagType);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        });
+    }
+
+
+// --------------------------------------------------------------------------------------------
+//                                  CAPTIONS
+
 
     @FXML
     private void handleChangeCaption() {
@@ -299,20 +333,46 @@ public class AlbumController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(caption -> {
             selectedPhoto.setCaption(caption);
+            setDateTime(selectedPhoto);
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            photoListView.refresh();
         });
     }
 
 
+// --------------------------------------------------------------------------------------------
+//                                  SLIDESHOW
+
+
+    @FXML
+    private void handleStartSlideshow(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SlideshowScene.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        SlideshowController slideshowController = loader.getController();
+        slideshowController.initData(album);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+// --------------------------------------------------------------------------------------------
+//                                  SEARCH
 
 
 
 
 
-
-
-
+// --------------------------------------------------------------------------------------------
+//                                  HELPERS
 
 
     private void showAlert(String title, String content) {
@@ -323,6 +383,7 @@ public class AlbumController {
         alert.showAndWait();
     }
 
+    
     private void updateUsersList(User updatedUser) {
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername().equals(updatedUser.getUsername())) {
@@ -330,5 +391,11 @@ public class AlbumController {
                 break;
             }
         }
+    }
+
+
+    private void setDateTime(Photo photo) {
+        photo.setDate(LocalDateTime.now());
+        photoListView.refresh();
     }
 }

@@ -4,6 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.time.format.DateTimeFormatter;
+
 import model.Photo;
 import model.Tag;
 
@@ -26,7 +29,8 @@ public class PhotoController {
         captionLabel.setText(photo.getCaption());
 
         // Set the photo date-time of capture
-        dateTimeLabel.setText(photo.getDate().toString());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+        dateTimeLabel.setText(photo.getDate().format(formatter));
 
         // Set the photo tags
         StringBuilder tagsStringBuilder = new StringBuilder();

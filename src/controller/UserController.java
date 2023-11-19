@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import model.Album;
 import model.User;
 import util.FileManager;
+import util.GlobalTags;
 
 import java.io.IOException;
 import java.util.List;
@@ -127,7 +128,8 @@ public class UserController {
             albumListView.getItems().add(newAlbum); // Update ListView
         });
         updateUsersList(user);
-        FileManager.saveData(users);
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+
     }
     
     
@@ -148,7 +150,8 @@ public class UserController {
                 albumListView.refresh();
             });
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+;
         }
         
     }
@@ -160,7 +163,8 @@ public class UserController {
             user.getAlbums().remove(selectedAlbum); // Remove album from user's album list
             albumListView.getItems().remove(selectedAlbum); // Update ListView
             updateUsersList(user);
-            FileManager.saveData(users);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+
         }
     }
 
@@ -171,6 +175,39 @@ public class UserController {
         stage.setScene(new Scene(root));
     }
 
+
+
+
+    @FXML
+    private void handleSearch(ActionEvent event) {
+        try {
+            // Load the FXML file for the search page
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SearchDashScene.fxml"));
+            Parent searchPage = loader.load();
+
+            // Set up the scene
+            Scene searchScene = new Scene(searchPage);
+
+            // Get the current stage from the event source
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Set the new scene to the stage
+            stage.setScene(searchScene);
+
+            // Optionally, initialize data for the search controller
+            SearchController searchController = loader.getController();
+            searchController.initData(users, user);
+
+            // Show the updated stage
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle IOException (e.g., FXML file not found)
+        }
+    }
+
+    
+  
     private void updateUsersList(User updatedUser) {
         // Replace the old user object with the updated one in the 'users' list
         for (int i = 0; i < users.size(); i++) {

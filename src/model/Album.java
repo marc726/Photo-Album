@@ -1,5 +1,8 @@
 package model;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.Optional;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,25 @@ public class Album implements Serializable{
     }
 
     public String toString() {
-        return "NAME: " + albumName + "\nPHOTO COUNT: " + photos.size() + "\nDATE:";
+        if (photos.isEmpty()) {
+            return "NAME: " + albumName + "\nPHOTO COUNT: 0\nOldest Photo: N/A\nNewest Photo: N/A";
+        }
+    
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+    
+        // Find the oldest photo based on the LocalDateTime attribute
+        Optional<Photo> oldestPhoto = photos.stream()
+            .min(Comparator.comparing(Photo::getDate));
+        // Find the newest photo based on the LocalDateTime attribute
+        Optional<Photo> newestPhoto = photos.stream()
+            .max(Comparator.comparing(Photo::getDate));
+    
+        // Format the dates of the oldest and newest photos, or return "N/A" if not available
+        String oldestPhotoDate = oldestPhoto.map(photo -> photo.getDate().format(formatter)).orElse("N/A");
+        String newestPhotoDate = newestPhoto.map(photo -> photo.getDate().format(formatter)).orElse("N/A");
+    
+        return "NAME: " + albumName + "\nPHOTO COUNT: " + photos.size() + 
+               "\nOldest Photo: " + oldestPhotoDate + 
+               "\nNewest Photo: " + newestPhotoDate;
     }
 }

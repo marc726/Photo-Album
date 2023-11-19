@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 /**
  * Represents a Photo with attributes.
@@ -16,16 +16,14 @@ public class Photo implements Serializable {
     private ArrayList<Tag> tags = new ArrayList<>();
     private String name;
     private String caption;
-    private Calendar date;
-    // private Image image;
+    private LocalDateTime date;
     private String imagePath;
     
 
 
-    public Photo(String name, Calendar date){
+    public Photo(String name, LocalDateTime date) {
         this.name = name;
         this.caption = "";
-        //this.image = image;
         this.date = date;
         this.tags = new ArrayList<Tag>();
     }
@@ -33,7 +31,7 @@ public class Photo implements Serializable {
     public Photo() {
         this.name = "";
         this.caption = "";
-        this.date = Calendar.getInstance();
+        this.date = LocalDateTime.now();
         this.tags = new ArrayList<Tag>();
     }
 
@@ -55,8 +53,12 @@ public class Photo implements Serializable {
         this.caption = caption;
     }
 
-    public Calendar getDate(){
+    public LocalDateTime getDate() {
         return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public ArrayList<Tag> getTags(){

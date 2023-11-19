@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SearchController">
+    <HBox spacing="10">
+        <Label text="Start Date:"/>
+        <DatePicker fx:id="startDatePicker"/>
+        <Label text="End Date:"/>
+        <DatePicker fx:id="endDatePicker"/>
+        <Button text="Search by Date Range" onAction="#handleSearchByDateRange"/>
+    </HBox>
+    <VBox fx:id="tagSearchVBox" spacing="10">
+        <HBox spacing="10">
+            <TextField fx:id="tagTypeField1" promptText="Tag Type"/>
+            <TextField fx:id="tagValueField1" promptText="Tag Value"/>
+            <Button text="Search by Tag" onAction="#handleSearchByTag"/>
+        </HBox>
+        <HBox spacing="10">
+            <TextField fx:id="tagTypeField2" promptText="Tag Type"/>
+            <TextField fx:id="tagValueField2" promptText="Tag Value"/>
+            <Button text="AND Search" onAction="#handleAndSearch"/>
+            <Button text="OR Search" onAction="#handleOrSearch"/>
+        </HBox>
+    </VBox>
+    <ListView fx:id="photoListView"/>
+    <Button text="Create Album from Results" onAction="#handleCreateAlbumFromResults"/>
+    <Button text="Back to Dashboard" onAction="#handleBackToDashboard" layoutX="100" layoutY="350"/>
+    <Button text="Clear Search" onAction="#handleClearSearch" layoutX="250" layoutY="350"/>
+</VBox>
