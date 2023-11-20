@@ -22,15 +22,11 @@ import javafx.scene.control.ButtonType;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.ArrayList;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 
 import model.User;
+import util.FileManager;
+import util.GlobalTags;
 
 
 
@@ -43,6 +39,7 @@ public class AdminController implements Initializable{
 
     @FXML
     private ListView<User> users;
+    private List<User> userList;
 
     /**
      * Initializes the controller after its root element has been completely processed.
@@ -53,7 +50,8 @@ public class AdminController implements Initializable{
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadData();
+        this.userList = FileManager.loadData(); // Load the users into the list
+        users.getItems().setAll(userList); // Display the users in the ListView
     }
 
     /**
@@ -87,9 +85,9 @@ public class AdminController implements Initializable{
                 alert.showAndWait();
             } else {
                 User newUser = new User(username);
-                users.getItems().add(newUser);
-                users.refresh();
-                saveData();
+                userList.add(newUser);
+                users.getItems().setAll(userList);
+                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes()); // Save the serializable list
             }
         });
     }
@@ -116,9 +114,9 @@ public class AdminController implements Initializable{
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
-                users.getItems().remove(selectedUser);
-                users.refresh();
-                saveData();
+                userList.remove(selectedUser);
+                users.getItems().setAll(userList);
+                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes()); // Save the serializable list
             }
         }
     }
@@ -143,42 +141,4 @@ public class AdminController implements Initializable{
      * 
      * @throws IOException if an I/O error occurs while saving the data
      */
-    public void saveData() {
-        try {
-            FileOutputStream fos = new FileOutputStream("data/data.dat");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(new ArrayList<>(users.getItems()));
-            oos.close();
-            fos.close();
-            System.out.println("Data saved successfully");
-        } catch (Exception e) {
-            System.err.println("Error saving data: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads data from a file and populates the user list.
-     * This method reads serialized objects from the "data/data.dat" file and adds them to the user list.
-     * If an error occurs during the loading process, an error message is printed along with the stack trace.
-     */
-    @SuppressWarnings("unchecked")
-    private void loadData() {
-    try {
-        FileInputStream fis = new FileInputStream("data/data.dat");
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        List<User> userList = (List<User>) ois.readObject();
-        users.getItems().clear();
-        users.getItems().addAll(userList);
-        ois.close();
-        fis.close();
-        System.out.println("Data loaded successfully (called from admin)");
-    } catch (Exception e) {
-        System.err.println("Error loading data: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-
-
-
 }

@@ -60,10 +60,11 @@ public class Photos {
 
             if (stockPhotos != null) {
                 for (File photoFile : stockPhotos) {
-                    // Create a Photo object for each file
-                    Photo photo = new Photo(photoFile.getName(), LocalDateTime.now()); // Adjust the date as needed
-                    photo.setImagePath(photoFile.getPath());
-
+                    // Adjust this part to match handleAddPhoto
+                    Photo photo = new Photo(photoFile.getName(), LocalDateTime.now());
+                    String imagePath = photoFile.toURI().toString(); // Convert file path to URI string
+                    photo.setImagePath(imagePath);
+    
                     // Add the photo to the stock album
                     stockAlbum.addPhoto(photo);
                 }
