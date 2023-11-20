@@ -4,12 +4,11 @@
 - Marcc Rizzolo (NetID: mtr120)
 - Bhavya Patel (NetID: bsp75)
 
-```markdown
 ## Application Launch Configuration
-
+```markdown
 This application uses the following launch configuration:
 
-```jsonc
+launch.json
 {
     "version": "0.2.0",
     "configurations": [
