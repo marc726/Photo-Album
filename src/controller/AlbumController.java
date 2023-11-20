@@ -117,22 +117,40 @@ public class AlbumController {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png", "*.bmp", "*.gif");
         fileChooser.getExtensionFilters().add(imageFilter);
-
+    
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             try {
                 String imagePath = file.toURI().toString();
-
+    
                 Photo newPhoto = new Photo(file.getName(), LocalDateTime.now());
                 newPhoto.setImagePath(imagePath);
+    
+                // Check for duplicate after adding the photo
+                Photo duplicatePhoto = findDuplicateInAllAlbums(newPhoto);
+                if (duplicatePhoto != null) {
+                    // Copy caption and tags from duplicate to new photo
+                    newPhoto.setCaption(duplicatePhoto.getCaption());
+                    newPhoto.getTags().clear(); // Clear existing tags if any
+                    for (Tag tag : duplicatePhoto.getTags()) {
+                        newPhoto.addTag(tag);
+                    }
+                    album.addPhoto(newPhoto);
+                    setupPhotoListView();
+    
+                    showAlert("Photo Added", "Photo has been added to the album. Caption and tags were copied to the new photo.");
 
-                album.addPhoto(newPhoto);
-                setupPhotoListView();
-
-                showAlert("Photo Added", "Photo has been added to the album.");
+                } else {
+                    // Add photo if no duplicate found
+                    album.addPhoto(newPhoto);
+                    setupPhotoListView();
+                    showAlert("Photo Added", "Photo has been added to the album.");
+                }
+    
                 updateUsersList(user);
                 FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
                 notifyAlbumChanged();
+    
             } catch (Exception e) {
                 showAlert("Error", "An error occurred while adding the photo: " + e.getMessage());
             }
@@ -163,6 +181,10 @@ public class AlbumController {
 
         if (result.isPresent()) {
             Album targetAlbum = result.get();
+            if (checkAlbumForDuplicatePhoto(selectedPhoto, targetAlbum)){
+                showAlert("Duplicate Photo", "This photo already exists in the destination album.");
+            return;
+        }
             album.getPhotos().remove(selectedPhoto);
             targetAlbum.addPhoto(selectedPhoto);
             setupPhotoListView();
@@ -204,6 +226,12 @@ public class AlbumController {
 
         if (result.isPresent()) {
             Album targetAlbum = result.get();
+
+            if (checkAlbumForDuplicatePhoto(selectedPhoto, targetAlbum)) {
+                showAlert("Duplicate Photo", "This photo already exists in the destination album.");
+                return;
+            }
+
             Photo copiedPhoto = new Photo(selectedPhoto.getName(), LocalDateTime.now());
             copiedPhoto.setImagePath(selectedPhoto.getImagePath());
             targetAlbum.addPhoto(copiedPhoto);
@@ -578,5 +606,28 @@ public class AlbumController {
         }
         return tags;
     }
+
+    private boolean checkAlbumForDuplicatePhoto(Photo photo, Album album) {
+        for (Photo p : album.getPhotos()) {
+            if (p.getImagePath().equals(photo.getImagePath())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Photo findDuplicateInAllAlbums(Photo photo) {
+        for(User user : users) {
+            for (Album album : user.getAlbums()) {
+                for (Photo existingPhoto : album.getPhotos()) {
+                    if (existingPhoto.getImagePath().equals(photo.getImagePath())) {
+                        return existingPhoto;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
 
 }
