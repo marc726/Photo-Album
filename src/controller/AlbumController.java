@@ -27,7 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -83,19 +83,25 @@ public class AlbumController {
                             setText(null);
                             setGraphic(null);
                         } else {
-                            VBox vbox = new VBox(5); // 5 is the spacing between elements
+                            HBox hbox = new HBox(10); // 10 is the spacing between elements
                             ImageView imageView = new ImageView(new javafx.scene.image.Image(photo.getImagePath()));
-                            imageView.setFitHeight(50); // Set thumbnail size
-                            imageView.setFitWidth(50);
-                            Label captionLabel = new Label(photo.getCaption());
-                            vbox.getChildren().addAll(imageView, captionLabel);
-                            setGraphic(vbox);
+                            imageView.setFitHeight(70); // Increased thumbnail size
+                            imageView.setFitWidth(70);
+                            imageView.setPreserveRatio(true);
+
+                            Label captionLabel = new Label("Caption: " + photo.getCaption());
+                            captionLabel.setWrapText(true); // Enable text wrapping
+                            captionLabel.setMaxWidth(200); // Adjust the maximum width for the label
+
+                            hbox.getChildren().addAll(imageView, captionLabel);
+                            setGraphic(hbox);
                         }
                     }
                 };
             }
         });
     }
+
 
     
 

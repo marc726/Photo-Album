@@ -23,14 +23,14 @@ public class Photo implements Serializable {
 
     public Photo(String name, LocalDateTime date) {
         this.name = name;
-        this.caption = "";
+        this.caption = "N/A";
         this.date = date;
         this.tags = new ArrayList<Tag>();
     }
 
     public Photo() {
         this.name = "";
-        this.caption = "";
+        this.caption = "N/A";
         this.date = LocalDateTime.now();
         this.tags = new ArrayList<Tag>();
     }

@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +52,11 @@ public class SearchController {
     private ListView<Photo> photoListView;
     @FXML
     private VBox tagSearchVBox;
+    @FXML
+    private ComboBox<String> tagTypeComboBox1;
+    @FXML
+    private ComboBox<String> tagTypeComboBox2;
+
 
     private List<User> users; 
     private User user;
@@ -64,6 +71,7 @@ public class SearchController {
         this.users = users;
         this.user = user;
         setupPhotoListView();
+        populateTagTypeComboBoxes();
     }
 
     /**
@@ -143,10 +151,10 @@ public class SearchController {
      */
     @FXML
     private void handleSearchByTag() {
-        String tagType = tagTypeField1.getText();
+        String tagType = tagTypeComboBox1.getValue();
         String tagValue = tagValueField1.getText();
-        if (tagType.isEmpty() || tagValue.isEmpty()) {
-            showAlert("Invalid Tag", "Please enter a tag type and value.");
+        if (tagType == null || tagValue.isEmpty()) {
+            showAlert("Invalid Tag", "Please select a tag type and enter a value.");
             return;
         }
 
@@ -181,9 +189,9 @@ public class SearchController {
      */
     @FXML
     private void handleAndSearch() {
-        String tagType1 = tagTypeField1.getText();
+        String tagType1 = tagTypeComboBox1.getValue();
         String tagValue1 = tagValueField1.getText();
-        String tagType2 = tagTypeField2.getText();
+        String tagType2 = tagTypeComboBox2.getValue();
         String tagValue2 = tagValueField2.getText();
 
         if (tagType1.isEmpty() || tagValue1.isEmpty() || tagType2.isEmpty() || tagValue2.isEmpty()) {
@@ -208,9 +216,9 @@ public class SearchController {
      */
     @FXML
     private void handleOrSearch() {
-        String tagType1 = tagTypeField1.getText();
+        String tagType1 = tagTypeComboBox1.getValue();
         String tagValue1 = tagValueField1.getText();
-        String tagType2 = tagTypeField2.getText();
+        String tagType2 = tagTypeComboBox2.getValue();
         String tagValue2 = tagValueField2.getText();
 
         if (tagType1.isEmpty() || tagValue1.isEmpty() || tagType2.isEmpty() || tagValue2.isEmpty()) {
@@ -248,6 +256,15 @@ public class SearchController {
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(albumName -> {
+
+            //check to see if album name exists in current user's album list
+            for (Album album : user.getAlbums()) {
+                if (album.getAlbumName().equalsIgnoreCase(albumName)) {
+                    showAlert("Album Already Exists", "An album with the same name already exists. Please choose a different name.");
+                    return;
+                }
+            }
+            
             Album newAlbum = new Album(albumName);
             newAlbum.getPhotos().addAll(selectedPhotos);
             addUserAlbum(newAlbum);
@@ -308,15 +325,22 @@ public class SearchController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UserDashScene.fxml"));
             Parent userDashboard = loader.load();
+    
+            // Retrieve the UserController and call the method that refreshes the album list
+            UserController userController = loader.getController();
+            userController.initSession(user); // Assume this method sets the user and refreshes the album list
+            userController.onAlbumChanged(); // Explicitly call the method to refresh the albums list
+    
             Scene userDashboardScene = new Scene(userDashboard);
-
+    
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(userDashboardScene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();  // Log the error or show an alert
+            e.printStackTrace(); // Log the error or show an alert
         }
     }
+    
 
     /**
      * Clears the search results in the ListView.
@@ -326,6 +350,12 @@ public class SearchController {
     @FXML
     private void handleClearSearch(ActionEvent event) {
         photoListView.setItems(FXCollections.observableArrayList());  // Clear the ListView
+    }
+
+    private void populateTagTypeComboBoxes() {
+        Set<String> tagTypes = GlobalTags.getInstance().getTagTypes();
+        tagTypeComboBox1.setItems(FXCollections.observableArrayList(tagTypes));
+        tagTypeComboBox2.setItems(FXCollections.observableArrayList(tagTypes));
     }
 }
 

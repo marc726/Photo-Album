@@ -51,6 +51,10 @@ public class Album implements Serializable{
             photos.add(photo);
         }
     }
+    
+    public void removeAllPhotos() {
+        getPhotos().clear();
+    }
 
     public String toString() {
         if (photos.isEmpty()) {

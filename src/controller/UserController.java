@@ -216,11 +216,18 @@ import javafx.scene.control.ListView;
     private void handleDeleteAlbum(ActionEvent event) {
         Album selectedAlbum = albumListView.getSelectionModel().getSelectedItem();
         if (selectedAlbum != null) {
-            user.getAlbums().remove(selectedAlbum); // Remove album from user's album list
-            albumListView.getItems().remove(selectedAlbum); // Update ListView
+            // Call the method to remove all photos from the album
+            selectedAlbum.removeAllPhotos();
+            
+            user.getAlbums().remove(selectedAlbum); // Remove the album from the user's album list
+            albumListView.getItems().remove(selectedAlbum); // Update the ListView
             updateUsersList(user);
             FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
-
+    
+            showAlert("Album Deleted", "The album and all its photos have been deleted.");
+        } else {
+            // Show an error message if no album is selected
+            showAlert("No Album Selected", "Please select an album to delete.");
         }
     }
 
@@ -296,6 +303,13 @@ import javafx.scene.control.ListView;
         albumListView.getItems().setAll(user.getAlbums());
     }
 
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
 
         

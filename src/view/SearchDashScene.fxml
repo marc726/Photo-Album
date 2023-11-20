@@ -12,12 +12,12 @@
     </HBox>
     <VBox fx:id="tagSearchVBox" spacing="10">
         <HBox spacing="10">
-            <TextField fx:id="tagTypeField1" promptText="Tag Type"/>
+            <ComboBox fx:id="tagTypeComboBox1" promptText="Tag Type"/>
             <TextField fx:id="tagValueField1" promptText="Tag Value"/>
             <Button text="Search by Tag" onAction="#handleSearchByTag"/>
         </HBox>
         <HBox spacing="10">
-            <TextField fx:id="tagTypeField2" promptText="Tag Type"/>
+            <ComboBox fx:id="tagTypeComboBox2" promptText="Tag Type"/>
             <TextField fx:id="tagValueField2" promptText="Tag Value"/>
             <Button text="AND Search" onAction="#handleAndSearch"/>
             <Button text="OR Search" onAction="#handleOrSearch"/>
