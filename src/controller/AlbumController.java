@@ -26,7 +26,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

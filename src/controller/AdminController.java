@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
@@ -72,7 +73,13 @@ public class AdminController implements Initializable{
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(username -> {
-            if (users.getItems().stream().anyMatch(user -> user.getUsername().equals(username))) {
+            if ("admin".equalsIgnoreCase(username)) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Invalid Username");
+                alert.setHeaderText("Username Not Allowed");
+                alert.setContentText("The username 'admin' is reserved. Please choose a different username.");
+                alert.showAndWait();
+            } else if (users.getItems().stream().anyMatch(user -> user.getUsername().equalsIgnoreCase(username))) {
                 Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Username already exists");
@@ -86,6 +93,7 @@ public class AdminController implements Initializable{
             }
         });
     }
+
 
     /**
      * Handles the action when the delete user button is clicked.

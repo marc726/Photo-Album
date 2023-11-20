@@ -145,14 +145,27 @@ public class UserController {
         dialog.setContentText("Please enter the name of the album:");
 
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(name -> {
-            Album newAlbum = new Album(name);
-            user.getAlbums().add(newAlbum); // Add new album to user's album list
-            albumListView.getItems().add(newAlbum); // Update ListView
-        });
-        updateUsersList(user);
-        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
 
+        result.ifPresent(name -> {
+            // Check if album name already exists
+            boolean albumExists = user.getAlbums().stream()
+                    .anyMatch(album -> album.getAlbumName().equalsIgnoreCase(name));
+
+            if (albumExists) {
+                // Show error message to the user
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Album Already Exists");
+                alert.setHeaderText(null);
+                alert.setContentText("An album with the same name already exists.");
+                alert.showAndWait();
+            } else {
+                Album newAlbum = new Album(name);
+                user.getAlbums().add(newAlbum); // Add new album to user's album list
+                albumListView.getItems().add(newAlbum); // Update ListView
+                updateUsersList(user);
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            }
+        });
     }
     
     
