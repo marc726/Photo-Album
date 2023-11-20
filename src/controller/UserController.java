@@ -297,12 +297,22 @@ import javafx.scene.control.ListView;
         }
     }
 
+    /**
+     * This method is called when the album is changed.
+     * It refreshes the ListView with the updated albums.
+     */
     @Override
     public void onAlbumChanged() {
         // Refresh the ListView
         albumListView.getItems().setAll(user.getAlbums());
     }
 
+    /**
+     * Displays an alert dialog with the specified title and content.
+     *
+     * @param title   the title of the alert dialog
+     * @param content the content of the alert dialog
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

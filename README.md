@@ -1,18 +1,33 @@
-## Getting Started
+# Group: photos38
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Members
+- Marcc Rizzolo (NetID: mtr120)
+- Bhavya Patel (NetID: bsp75)
 
-## Folder Structure
+```markdown
+## Application Launch Configuration
 
-The workspace contains two folders by default, where:
+This application uses the following launch configuration:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+```jsonc
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "Photos",
+            "vmArgs": "--module-path \"path_to_javafx_sdk_on_your_system\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
+```
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Please replace `path_to_javafx_sdk_on_your_system` with the actual path to the JavaFX SDK on your Windows system.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Note for macOS Users
 
-## Dependency Management
+This application was developed on a Windows system. If you want to run it on macOS, you need to replace the dependencies under the `lib` folder with the macOS JavaFX `.jar` files.
+```
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).

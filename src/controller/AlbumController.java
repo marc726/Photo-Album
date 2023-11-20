@@ -398,6 +398,12 @@ public class AlbumController {
     }
 
 
+    /**
+     * Handles the action of removing a tag from a selected photo.
+     * If no photo is selected, it displays an alert.
+     * If the selected photo has no tags, it displays an alert.
+     * Otherwise, it removes the tag from the selected photo and any other photos with the same image path.
+     */
     @FXML
     private void handleRemoveTagFromPhoto() {
         Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
@@ -415,6 +421,11 @@ public class AlbumController {
         removeTagFromMatchingPhotos(currentImagePath);
     }
 
+    /**
+     * Removes a tag from all photos that match the given image path.
+     *
+     * @param imagePath the path of the image
+     */
     private void removeTagFromMatchingPhotos(String imagePath) {
         ChoiceDialog<Tag> dialog = new ChoiceDialog<>(null, new ArrayList<>(getTagsForImage(imagePath)));
         dialog.setTitle("Remove Tag");
@@ -627,6 +638,12 @@ public class AlbumController {
     }
 
 
+    /**
+     * Changes the caption for all photos that match the given image path.
+     *
+     * @param imagePath  the image path to match
+     * @param newCaption the new caption to set
+     */
     private void changeCaptionForAllMatchingPhotos(String imagePath, String newCaption) {
         for (User usr : users) {
             for (Album alb : usr.getAlbums()) {
@@ -643,6 +660,12 @@ public class AlbumController {
     }
 
 
+    /**
+     * Retrieves the set of tags associated with a specific image.
+     *
+     * @param imagePath The path of the image.
+     * @return The set of tags associated with the image.
+     */
     private Set<Tag> getTagsForImage(String imagePath) {
         Set<Tag> tags = new HashSet<>();
         for (User usr : users) {
@@ -658,6 +681,13 @@ public class AlbumController {
     }
 
 
+    /**
+     * Checks if the given photo already exists in the specified album.
+     * 
+     * @param photo The photo to check for duplicates.
+     * @param album The album to search for duplicates in.
+     * @return true if the photo is a duplicate, false otherwise.
+     */
     private boolean checkAlbumForDuplicatePhoto(Photo photo, Album album) {
         for (Photo p : album.getPhotos()) {
             if (p.getImagePath().equals(photo.getImagePath())) {
@@ -668,6 +698,16 @@ public class AlbumController {
     }
 
     
+    /**
+     * Finds a duplicate photo in all albums across all users based on the image path.
+     *
+     * This method iterates through each user, their albums, and the photos within those albums
+     * to check if a photo with the same image path as the provided photo already exists.
+     * If a duplicate photo is found, the existing photo is returned; otherwise, null is returned.
+     *
+     * @param photo The photo to check for duplicates.
+     * @return The existing photo with the same image path if a duplicate is found, otherwise null.
+     */
     private Photo findDuplicateInAllAlbums(Photo photo) {
         for(User user : users) {
             for (Album album : user.getAlbums()) {
