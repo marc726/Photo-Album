@@ -75,7 +75,7 @@ public class Photos {
             // Scan the data/stock directory for photos
             File stockDir = new File("data/stock");
             File[] stockPhotos = stockDir.listFiles((dir, name) -> 
-                name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".png") ||
+                name.toLowerCase().endsWith(".jpeg") || name.toLowerCase().endsWith(".png") ||
                 name.toLowerCase().endsWith(".gif") || name.toLowerCase().endsWith(".bmp"));
 
             if (stockPhotos != null) {
