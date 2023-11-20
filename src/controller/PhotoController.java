@@ -66,6 +66,12 @@ public class PhotoController {
     };
     
 
+    /**
+     * Adjusts the size of the stage based on the dimensions of the displayed image and other UI elements.
+     * 
+     * @param stage The stage to adjust the size of.
+     * @param image The image used for calculating the dimensions.
+     */
     private void adjustWindowSize(Stage stage, Image image) {
         // Calculate the actual height of the displayed image
         double aspectRatio = image.getWidth() / image.getHeight();

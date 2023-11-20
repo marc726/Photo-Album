@@ -20,13 +20,28 @@ import model.User;
 import util.FileManager;
 import util.GlobalTags;
 
+/**
+ * The Photos class is the main class of the application.
+ * It launches the PhotosApp and initializes the data if necessary.
+ */
 public class Photos {
 
     public static void main(String[] args) {
         Application.launch(PhotosApp.class, args);
     }
 
+    /**
+     * The PhotosApp class is the main class of the application.
+     * It extends the Application class and is responsible for starting the application and initializing the data.
+     */
     public static class PhotosApp extends Application {
+        /**
+         * This method is the entry point of the application.
+         * It initializes the data and sets up the login scene.
+         *
+         * @param primaryStage the primary stage of the application
+         * @throws Exception if an error occurs during the initialization
+         */
         @Override
         public void start(Stage primaryStage) throws Exception {
             checkAndInitializeData();
@@ -37,6 +52,11 @@ public class Photos {
             primaryStage.show();
         }
 
+        /**
+         * Checks if the data file exists and initializes the necessary data if it doesn't.
+         * This method creates a new list of users, adds a stock user and album, scans the stock directory for photos,
+         * creates default tags, sets the default tags to GlobalTags, and saves the users list and tags to the data file.
+         */
         private void checkAndInitializeData() {
         // Check if data.dat exists
         Path dataPath = Paths.get("data/data.dat");
