@@ -3,6 +3,8 @@ package controller;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -298,48 +300,89 @@ public class AlbumController {
             showAlert("No Photo Selected", "Please select a photo to add a tag to.");
             return;
         }
-
+    
+        String currentImagePath = selectedPhoto.getImagePath();
+        addTagToMatchingPhotos(currentImagePath);
+    }
+    
+    private void addTagToMatchingPhotos(String imagePath) {
         GlobalTags globalTags = GlobalTags.getInstance();
         Set<String> tagTypes = globalTags.getTagTypes();
-
+    
         if (tagTypes.isEmpty()) {
             showAlert("No Tag Types Available", "Please add a tag type first.");
             return;
         }
-
+    
         ChoiceDialog<String> tagTypeDialog = new ChoiceDialog<>(null, tagTypes);
         tagTypeDialog.setTitle("Select Tag Type");
         tagTypeDialog.setHeaderText("Choose a tag type:");
-
         Optional<String> tagTypeResult = tagTypeDialog.showAndWait();
+    
         tagTypeResult.ifPresent(tagType -> {
-            while (true) {
-                TextInputDialog tagValueDialog = new TextInputDialog();
-                tagValueDialog.setTitle("Add Tag");
-                tagValueDialog.setHeaderText("Add tag value for " + tagType);
-                tagValueDialog.setContentText("Enter tag value (Cancel to stop):");
-
-                Optional<String> tagValueResult = tagValueDialog.showAndWait();
-                if (tagValueResult.isPresent()) {
-                    String tagValue = tagValueResult.get();
-                    Tag newTag = new Tag(tagType, tagValue);
-
-                    // Check if the tag already exists
-                    if (selectedPhoto.getTags().contains(newTag)) {
-                        showAlert("Duplicate Tag", "This photo already has a tag with the same name and value.");
-                    } else {
-                        selectedPhoto.addTag(newTag);
+            TextInputDialog tagValueDialog = new TextInputDialog();
+            tagValueDialog.setTitle("Add Tag");
+            tagValueDialog.setHeaderText("Add tag value for " + tagType);
+            tagValueDialog.setContentText("Enter tag value:");
+    
+            Optional<String> tagValueResult = tagValueDialog.showAndWait();
+            tagValueResult.ifPresent(tagValue -> {
+                Tag newTag = new Tag(tagType, tagValue);
+                for (User usr : users) {
+                    for (Album alb : usr.getAlbums()) {
+                        for (Photo photo : alb.getPhotos()) {
+                            if (photo.getImagePath().equals(imagePath) && !photo.getTags().contains(newTag)) {
+                                photo.addTag(newTag);
+                            }
+                        }
                     }
-                } else {
-                    break; // Exit the loop if the user cancels
                 }
-            }
-            photoListView.refresh();
-            updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                updateUsersList(user);
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                photoListView.refresh();
+            });
         });
     }
 
+
+    @FXML
+    private void handleRemoveTagFromPhoto() {
+        Photo selectedPhoto = photoListView.getSelectionModel().getSelectedItem();
+        if (selectedPhoto == null) {
+            showAlert("No Photo Selected", "Please select a photo to remove a tag from.");
+            return;
+        }
+
+        if (selectedPhoto.getTags().isEmpty()) {
+            showAlert("No Tags", "This photo has no tags to remove.");
+            return;
+        }
+
+        String currentImagePath = selectedPhoto.getImagePath();
+        removeTagFromMatchingPhotos(currentImagePath);
+    }
+
+    private void removeTagFromMatchingPhotos(String imagePath) {
+        ChoiceDialog<Tag> dialog = new ChoiceDialog<>(null, new ArrayList<>(getTagsForImage(imagePath)));
+        dialog.setTitle("Remove Tag");
+        dialog.setHeaderText("Select a tag to remove:");
+        Optional<Tag> result = dialog.showAndWait();
+
+        result.ifPresent(tagToRemove -> {
+            for (User usr : users) {
+                for (Album alb : usr.getAlbums()) {
+                    for (Photo photo : alb.getPhotos()) {
+                        if (photo.getImagePath().equals(imagePath)) {
+                            photo.getTags().remove(tagToRemove);
+                        }
+                    }
+                }
+            }
+            updateUsersList(user);
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            photoListView.refresh();
+        });
+    }
 
     
 
@@ -381,6 +424,7 @@ public class AlbumController {
             return;
         }
         
+        
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Change Caption");
         dialog.setHeaderText("Change the caption of the photo");
@@ -417,6 +461,8 @@ public class AlbumController {
             selectedPhoto.setCaption(caption);
             setDateTime(selectedPhoto);
             updateUsersList(user);
+            String photoFilePath = selectedPhoto.getImagePath(); // New variable to get the photo's file path
+            changeCaptionForAllMatchingPhotos(photoFilePath, caption);
             FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
             photoListView.refresh();
         });
@@ -502,6 +548,35 @@ public class AlbumController {
         if (listener != null) {
             listener.onAlbumChanged();
         }
+    }
+
+    private void changeCaptionForAllMatchingPhotos(String imagePath, String newCaption) {
+        for (User usr : users) {
+            for (Album alb : usr.getAlbums()) {
+                for (Photo photo : alb.getPhotos()) {
+                    if (photo.getImagePath().equals(imagePath)) {
+                        photo.setCaption(newCaption);
+                    }
+                }
+            }
+        }
+        updateUsersList(user);
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        photoListView.refresh();
+    }
+
+    private Set<Tag> getTagsForImage(String imagePath) {
+        Set<Tag> tags = new HashSet<>();
+        for (User usr : users) {
+            for (Album alb : usr.getAlbums()) {
+                for (Photo photo : alb.getPhotos()) {
+                    if (photo.getImagePath().equals(imagePath)) {
+                        tags.addAll(photo.getTags());
+                    }
+                }
+            }
+        }
+        return tags;
     }
 
 }
