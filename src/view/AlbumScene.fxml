@@ -15,6 +15,7 @@
             </Menu>
             <Menu text="Tags">
                 <MenuItem text="Add Tag to Picture" onAction="#handleAddTagToPhoto"/>
+                <MenuItem text="Remove Tag from Picture" onAction="#handleRemoveTagFromPhoto"/>
                 <MenuItem text="Add Tag Type" onAction="#handleAddTagType"/>
             </Menu>
             <Menu text="Captions">
