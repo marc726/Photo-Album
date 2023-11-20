@@ -100,6 +100,12 @@ public class PhotoController {
     
     
     
+    /**
+     * Extracts the file name from the given image path.
+     *
+     * @param imagePath the path of the image file
+     * @return the extracted file name
+     */
     private String extractFileName(String imagePath) {
         // Assuming the path is a file URL, which looks like file:/path/to/file.jpg
         int lastSlashIndex = imagePath.lastIndexOf('/');

@@ -301,6 +301,7 @@ public class AlbumController {
         Parent root = null;
         try {
             root = loader.load();
+            
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -339,6 +340,18 @@ public class AlbumController {
         addTagToMatchingPhotos(currentImagePath, selectedPhoto);
     }
     
+    /**
+     * Adds a tag to the matching photos based on the given image path and selected photo.
+     * If the tag types are empty, it displays an alert message.
+     * Prompts the user to select a tag type and enter a tag value.
+     * Checks if the selected photo already has a tag with the same type and value, and displays an alert message if so.
+     * Checks if the tag type is restricted and if the photo already has an instance of this tag, and displays an alert message if so.
+     * Adds the tag to the matching photos and updates the user's list.
+     * Saves the data and refreshes the photo list view.
+     *
+     * @param imagePath     the image path of the photo
+     * @param selectedPhoto the selected photo to add the tag to
+     */
     private void addTagToMatchingPhotos(String imagePath, Photo selectedPhoto) {
         GlobalTags globalTags = GlobalTags.getInstance();
         Set<String> restrictedTagTypes = globalTags.getRestrictedTagTypes();
@@ -421,6 +434,7 @@ public class AlbumController {
         removeTagFromMatchingPhotos(currentImagePath);
     }
 
+    
     /**
      * Removes a tag from all photos that match the given image path.
      *

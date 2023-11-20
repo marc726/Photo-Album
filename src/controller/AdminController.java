@@ -134,11 +134,4 @@ public class AdminController implements Initializable{
         Parent root = FXMLLoader.load(getClass().getResource("/view/LoginScene.fxml"));
         stage.setScene(new Scene(root));
     }
-
-    /**
-     * Saves the data by serializing the list of items in the 'users' object
-     * and writing it to a file named "data.dat".
-     * 
-     * @throws IOException if an I/O error occurs while saving the data
-     */
 }

@@ -16,11 +16,21 @@ public class GlobalTags {
     private Set<String> tagTypes;
     private Set<String> restrictedTagTypes;
 
+    /**
+     * The GlobalTags class represents a utility class for managing global tags.
+     * It provides methods for initializing and managing tag types.
+     */
     private GlobalTags() {
         tagTypes = new HashSet<>(); // Initialize the tagTypes set
         restrictedTagTypes = new HashSet<>();
     }
 
+    /**
+     * Returns the singleton instance of the GlobalTags class.
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of the GlobalTags class
+     */
     public static synchronized GlobalTags getInstance() {
         if (instance == null) {
             instance = new GlobalTags(); // Create a new instance if it doesn't exist
