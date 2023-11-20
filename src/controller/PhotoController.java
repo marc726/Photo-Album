@@ -1,3 +1,9 @@
+/**
+ * @author Bhavya Patel
+ * @author Marc Rizzolo
+ * 
+ */
+
 package controller;
 
 import javafx.application.Platform;

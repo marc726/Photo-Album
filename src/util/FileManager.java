@@ -35,16 +35,7 @@ public class FileManager {
         tagTypes = tags;
     }
 
-   
-
-
-
-
-
-
-
-
-
+    
 
     /**
      * Saves the given list of users and set of tag types to a file.
@@ -62,10 +53,6 @@ public class FileManager {
             e.printStackTrace();
         }
     }
-
-
-       
-    
 
 
 

@@ -1,3 +1,8 @@
+/**
+ * @author Marc Rizzolo
+ * 
+ */
+
 package controller;
 
 import java.io.File;
