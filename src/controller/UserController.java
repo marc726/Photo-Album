@@ -26,6 +26,7 @@ import model.Album;
 import model.User;
 import util.FileManager;
 import util.GlobalTags;
+import util.AlbumChangeListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +39,11 @@ import javafx.scene.control.ListView;
  * The UserController class is responsible for controlling the user interface and handling user interactions
  * related to user management and album operations.
  */
-public class UserController {
+
+
+
+
+ public class UserController implements AlbumChangeListener {
 
     @FXML
     private Label welcomeLabel;
@@ -109,7 +114,7 @@ public class UserController {
 
             // Get the controller for the AlbumViewScene
             AlbumController albumViewController = loader.getController();
-            albumViewController.initData(selectedAlbum, users , user); // Method to initialize data in AlbumViewController
+            albumViewController.initData(selectedAlbum, users , user, this); // Method to initialize data in AlbumViewController
 
             // Create the new scene and display it in a new window or dialog
             Scene albumViewScene = new Scene(albumViewRoot);
@@ -119,6 +124,7 @@ public class UserController {
 
             albumStage.initModality(Modality.WINDOW_MODAL);
             albumStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            
 
             albumStage.show();
         } catch (IOException e) {
@@ -282,6 +288,12 @@ public class UserController {
                 break;
             }
         }
+    }
+
+    @Override
+    public void onAlbumChanged() {
+        // Refresh the ListView
+        albumListView.getItems().setAll(user.getAlbums());
     }
 
 }

@@ -38,6 +38,7 @@ import model.User;
 import model.Tag;
 import util.FileManager;
 import util.GlobalTags;
+import util.AlbumChangeListener;
 
 /**
  * The AlbumController class is responsible for managing the user interface and functionality
@@ -51,15 +52,17 @@ public class AlbumController {
     private Album album; // The album you're displaying
     private User user; // The user that owns the album
     private List<User> users;
+    private AlbumChangeListener listener;
+
 
     // Initialize with an album, users list, and user
-    public void initData(Album album, List<User> users, User user) {
+    public void initData(Album album, List<User> users, User user, AlbumChangeListener listener) {
         this.album = album;
         this.user = user;
         this.users = users;
+        this.listener = listener;
         setupPhotoListView();
     }
-
 
 
     /**
@@ -127,6 +130,7 @@ public class AlbumController {
                 showAlert("Photo Added", "Photo has been added to the album.");
                 updateUsersList(user);
                 FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                notifyAlbumChanged();
             } catch (Exception e) {
                 showAlert("Error", "An error occurred while adding the photo: " + e.getMessage());
             }
@@ -162,6 +166,7 @@ public class AlbumController {
             setupPhotoListView();
             updateUsersList(user);
             FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            notifyAlbumChanged();
             showAlert("Photo Moved", "The photo has been moved to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not moved.");
@@ -234,6 +239,7 @@ public class AlbumController {
         setupPhotoListView();
         updateUsersList(user);
         FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        notifyAlbumChanged();
         showAlert("Photo Removed", "The photo has been removed from the album.");
     }
 
@@ -491,4 +497,11 @@ public class AlbumController {
         photo.setDate(LocalDateTime.now());
         photoListView.refresh();
     }
+
+    private void notifyAlbumChanged() {
+        if (listener != null) {
+            listener.onAlbumChanged();
+        }
+    }
+
 }
