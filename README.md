@@ -5,10 +5,11 @@
 - Bhavya Patel (NetID: bsp75)
 
 ## Application Launch Configuration
+
+launch.json
 ```markdown
 This application uses the following launch configuration:
 
-launch.json
 {
     "version": "0.2.0",
     "configurations": [
