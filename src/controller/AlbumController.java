@@ -23,6 +23,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -30,6 +31,7 @@ import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 
 import model.Album;
 import model.Photo;
@@ -74,18 +76,27 @@ public class AlbumController {
                     protected void updateItem(Photo photo, boolean empty) {
                         super.updateItem(photo, empty);
                         if (empty || photo == null) {
-                            setText(null);
                             setGraphic(null);
                         } else {
-                            VBox vbox = new VBox(5); // 5 is the spacing between elements
-                            ImageView imageView = new ImageView(new javafx.scene.image.Image(photo.getImagePath()));
-                            imageView.setFitHeight(50); // Set thumbnail size
-                            imageView.setFitWidth(50);
-                            Label captionLabel = new Label(photo.getCaption());
-                            vbox.getChildren().addAll(imageView, captionLabel);
-                            setGraphic(vbox);
+                            ImageView imageView = new ImageView();
+                            try {
+                                File file = new File(photo.getImagePath());
+                                if (file.exists()) {
+                                    Image image = new Image(file.toURI().toString(), 50, 50, true, true);
+                                    imageView.setImage(image);
+                                } else {
+                                    // Log or handle the case where the file doesn't exist
+                                    System.out.println("File not found: " + photo.getImagePath());
+                                    imageView.setImage(null); // Or set to a placeholder image
+                                }
+                            } catch (Exception e) {
+                                // Handle any other exceptions
+                                e.printStackTrace();
+                            }
+                            setGraphic(imageView);
                         }
                     }
+
                 };
             }
         });
@@ -443,13 +454,6 @@ public class AlbumController {
         stage.setScene(new Scene(root));
         stage.show();
     }
-
-// --------------------------------------------------------------------------------------------
-//                                  SEARCH
-
-
-
-
 
 // --------------------------------------------------------------------------------------------
 //                                  HELPERS
