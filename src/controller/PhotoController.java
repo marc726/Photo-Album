@@ -3,10 +3,12 @@ package controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
+
 
 import java.time.format.DateTimeFormatter;
 
@@ -27,6 +29,8 @@ public class PhotoController {
     private Label tagsLabel;
     @FXML
     private VBox contentBox;
+    @FXML
+    private ScrollPane captionScrollPane;
 
     /**
      * Sets the photo to be displayed in the controller.
@@ -38,10 +42,12 @@ public class PhotoController {
         Image image = new Image(photo.getImagePath());
         photoImageView.setImage(image);
 
-        // Set the photo caption
-        captionLabel.setText("Caption: " + photo.getCaption()); // Prefix "Caption: "
-        captionLabel.setWrapText(true); // Enable text wrapping
-        captionLabel.setMaxWidth(photoImageView.getFitWidth());
+        // Set the photo caption with ScrollPane
+        captionLabel.setText(photo.getCaption());
+        captionScrollPane.setContent(captionLabel);
+        captionScrollPane.setFitToWidth(true); // Ensures the ScrollPane fits the width of the contentBox
+        captionScrollPane.setPrefHeight(ScrollPane.USE_COMPUTED_SIZE);
+        captionScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Only show vertical scrollbar when needed
 
         // Set the photo date-time of capture
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
@@ -67,33 +73,26 @@ public class PhotoController {
     
 
     private void adjustWindowSize(Stage stage, Image image) {
-        // Calculate the actual height of the displayed image
-        double aspectRatio = image.getWidth() / image.getHeight();
-        double displayedImageHeight = photoImageView.getFitWidth() / aspectRatio;
-
-        // Calculate the preferred height for the caption label based on its width
-        // Apply CSS and layout to ensure the label's height is computed based on the text
-        captionLabel.applyCss();
-        captionLabel.layout();
-        double captionHeight = captionLabel.getHeight();
-
-        // Calculate the total height and width required, adding spacing and padding
-        double padding = 20; // Assuming padding is 20 on each side
-        double totalHeight = displayedImageHeight + captionHeight +
-                             dateTimeLabel.getHeight() + tagsLabel.getHeight() +
-                             40 + (2 * padding); // Additional spacing between elements + padding
-
-        // Determine the width of the window
-        double totalWidth = photoImageView.getFitWidth() + (2 * padding); // Assuming the image width defines the window width
-
-        // Adjust the stage size
-        stage.setWidth(totalWidth);
-        stage.setHeight(totalHeight);
-
-        // Set the minimum size to the current size
+    
+        // Update the layout to reflect any changes in content
+        contentBox.requestLayout();
+    
+        // Calculate the height of the ScrollPane based on the content
+        captionScrollPane.setPrefHeight(ScrollPane.USE_COMPUTED_SIZE);
+        captionScrollPane.applyCss();
+        captionScrollPane.layout();
+    
+        // Adjust the stage size based on the content
+        stage.sizeToScene();
+    
+        // Set the minimum size to the current size if necessary
         stage.setMinWidth(stage.getWidth());
         stage.setMinHeight(stage.getHeight());
     }
+    
+
+    
+    
     
     private String extractFileName(String imagePath) {
         // Assuming the path is a file URL, which looks like file:/path/to/file.jpg
