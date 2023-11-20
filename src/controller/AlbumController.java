@@ -148,7 +148,7 @@ public class AlbumController {
                 }
     
                 updateUsersList(user);
-                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
                 notifyAlbumChanged();
     
             } catch (Exception e) {
@@ -189,7 +189,7 @@ public class AlbumController {
             targetAlbum.addPhoto(selectedPhoto);
             setupPhotoListView();
             updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             notifyAlbumChanged();
             showAlert("Photo Moved", "The photo has been moved to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
@@ -237,7 +237,7 @@ public class AlbumController {
             targetAlbum.addPhoto(copiedPhoto);
             setupPhotoListView();
             updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             showAlert("Photo Copied", "The photo has been copied to the album: " + targetAlbum.getAlbumName() + ".");
         } else {
             showAlert("No Album Selected", "No album was selected. Photo was not copied.");
@@ -268,7 +268,7 @@ public class AlbumController {
         album.getPhotos().remove(selectedPhoto);
         setupPhotoListView();
         updateUsersList(user);
-        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
         notifyAlbumChanged();
         showAlert("Photo Removed", "The photo has been removed from the album.");
     }
@@ -330,18 +330,19 @@ public class AlbumController {
         }
     
         String currentImagePath = selectedPhoto.getImagePath();
-        addTagToMatchingPhotos(currentImagePath);
+        addTagToMatchingPhotos(currentImagePath, selectedPhoto);
     }
     
-    private void addTagToMatchingPhotos(String imagePath) {
+    private void addTagToMatchingPhotos(String imagePath, Photo selectedPhoto) {
         GlobalTags globalTags = GlobalTags.getInstance();
+        Set<String> restrictedTagTypes = globalTags.getRestrictedTagTypes();
         Set<String> tagTypes = globalTags.getTagTypes();
     
         if (tagTypes.isEmpty()) {
             showAlert("No Tag Types Available", "Please add a tag type first.");
             return;
         }
-    
+
         ChoiceDialog<String> tagTypeDialog = new ChoiceDialog<>(null, tagTypes);
         tagTypeDialog.setTitle("Select Tag Type");
         tagTypeDialog.setHeaderText("Choose a tag type:");
@@ -356,6 +357,24 @@ public class AlbumController {
             Optional<String> tagValueResult = tagValueDialog.showAndWait();
             tagValueResult.ifPresent(tagValue -> {
                 Tag newTag = new Tag(tagType, tagValue);
+
+                if (selectedPhoto.getTags().contains(newTag) && !selectedPhoto.getTags().isEmpty()){
+                    showAlert("Duplicate Tag", "The photo already has a tag with the same type and value.");
+                    return;
+                }
+
+                System.out.println("Restricted tag types: " + restrictedTagTypes);
+                if (restrictedTagTypes.contains(tagType)) {
+                    
+                    System.out.println("Restricted tag type");
+                    for (Tag existingTag : selectedPhoto.getTags()) {
+                        if (existingTag.getTagName().equals(newTag.getTagName())) {
+                            showAlert("Restricted Tag Type", "This photo already has an instance of this tag. You cannot add another tag of this type.");
+                            return;
+                        }
+                    }
+                }
+
                 for (User usr : users) {
                     for (Album alb : usr.getAlbums()) {
                         for (Photo photo : alb.getPhotos()) {
@@ -366,7 +385,7 @@ public class AlbumController {
                     }
                 }
                 updateUsersList(user);
-                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
                 photoListView.refresh();
             });
         });
@@ -407,7 +426,7 @@ public class AlbumController {
                 }
             }
             updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             photoListView.refresh();
         });
     }
@@ -425,14 +444,36 @@ public class AlbumController {
         dialog.setTitle("Add Tag Type");
         dialog.setHeaderText("Create a new tag type");
         dialog.setContentText("Enter tag type:");
-
+    
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(tagType -> {
-            GlobalTags.getInstance().addTagType(tagType);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            GlobalTags globalTags = GlobalTags.getInstance();
+    
+            if (globalTags.getTagTypes().contains(tagType)) {
+                showAlert("Tag Type Exists", "The tag type already exists.");
+            } else {
+                // Ask if the tag type should be restricted
+                Alert restrictDialog = new Alert(Alert.AlertType.CONFIRMATION);
+                restrictDialog.setTitle("Restrict Tag Type");
+                restrictDialog.setHeaderText("Restricted tags allow only one instance per photo.");
+                restrictDialog.setContentText("Do you want to restrict this tag type?");
+    
+                ButtonType buttonYes = new ButtonType("Yes", ButtonData.YES);
+                ButtonType buttonNo = new ButtonType("No", ButtonData.NO);
+                restrictDialog.getButtonTypes().setAll(buttonYes, buttonNo);
+    
+                Optional<ButtonType> restrictResult = restrictDialog.showAndWait();
+    
+                if (restrictResult.isPresent() && restrictResult.get() == buttonYes) {
+                    globalTags.addRestrictedTagType(tagType);
+                }
+    
+                globalTags.addTagType(tagType);
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
+            }
         });
     }
-
+    
 
 // --------------------------------------------------------------------------------------------
 //                                  CAPTIONS
@@ -491,7 +532,7 @@ public class AlbumController {
             updateUsersList(user);
             String photoFilePath = selectedPhoto.getImagePath(); // New variable to get the photo's file path
             changeCaptionForAllMatchingPhotos(photoFilePath, caption);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             photoListView.refresh();
         });
     }
@@ -572,11 +613,13 @@ public class AlbumController {
         photoListView.refresh();
     }
 
+
     private void notifyAlbumChanged() {
         if (listener != null) {
             listener.onAlbumChanged();
         }
     }
+
 
     private void changeCaptionForAllMatchingPhotos(String imagePath, String newCaption) {
         for (User usr : users) {
@@ -589,9 +632,10 @@ public class AlbumController {
             }
         }
         updateUsersList(user);
-        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
         photoListView.refresh();
     }
+
 
     private Set<Tag> getTagsForImage(String imagePath) {
         Set<Tag> tags = new HashSet<>();
@@ -607,6 +651,7 @@ public class AlbumController {
         return tags;
     }
 
+
     private boolean checkAlbumForDuplicatePhoto(Photo photo, Album album) {
         for (Photo p : album.getPhotos()) {
             if (p.getImagePath().equals(photo.getImagePath())) {
@@ -616,6 +661,7 @@ public class AlbumController {
         return false;
     }
 
+    
     private Photo findDuplicateInAllAlbums(Photo photo) {
         for(User user : users) {
             for (Album album : user.getAlbums()) {

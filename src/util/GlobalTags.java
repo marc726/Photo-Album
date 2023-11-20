@@ -14,9 +14,11 @@ import java.util.Set;
 public class GlobalTags {
     private static GlobalTags instance;
     private Set<String> tagTypes;
+    private Set<String> restrictedTagTypes;
 
     private GlobalTags() {
         tagTypes = new HashSet<>(); // Initialize the tagTypes set
+        restrictedTagTypes = new HashSet<>();
     }
 
     public static synchronized GlobalTags getInstance() {
@@ -52,4 +54,43 @@ public class GlobalTags {
     public void addTagType(String tagType) {
         tagTypes.add(tagType); // Add a new tagType to the tagTypes set
     }
+
+        /**
+     * Returns the set of restricted tag types.
+     *
+     * @return the set of restricted tag types
+     */
+    public Set<String> getRestrictedTagTypes() {
+        return restrictedTagTypes;
+    }
+
+    /**
+     * Adds a new restricted tag type to the restrictedTagTypes set.
+     *
+     * @param restrictedTagType the tag type to be added as restricted
+     */
+    public void addRestrictedTagType(String restrictedTagType) {
+        restrictedTagTypes.add(restrictedTagType);
+    }
+
+    /**
+     * Checks if a tag type is restricted.
+     *
+     * @param tagType the tag type to check
+     * @return true if the tag type is restricted, false otherwise
+     */
+    public boolean isTagTypeRestricted(String tagType) {
+        return restrictedTagTypes.contains(tagType);
+    }
+
+    /**
+     * Sets the restricted tag types for this object.
+     * 
+     * @param restrictedTagTypes the set of restricted tag types to be set
+     * 
+     */
+    public void setRestrictedTagTypes(Set<String> restrictedTagTypes) {
+        this.restrictedTagTypes = restrictedTagTypes;
+    }
+
 }

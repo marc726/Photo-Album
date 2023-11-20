@@ -23,6 +23,7 @@ public class FileManager {
 
     // Define a private static set to store tag types
     private static Set<String> tagTypes = new HashSet<>();
+    private static Set<String> restrictedTagTypes = new HashSet<>();
 
     // Method to get the tag types
     public static Set<String> getTagTypes() {
@@ -51,10 +52,11 @@ public class FileManager {
      * @param users    the list of users to be saved
      * @param tagTypes the set of tag types to be saved
      */
-    public static void saveData(List<User> users, Set<String> tagTypes) {
+    public static void saveData(List<User> users, Set<String> tagTypes, Set<String> restrictedTagTypes) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/data.dat"))) {
             oos.writeObject(users);
             oos.writeObject(tagTypes); // Save the tags along with the users
+            oos.writeObject(restrictedTagTypes);
         } catch (IOException e) {
             System.err.println("Error saving data: " + e.getMessage());
             e.printStackTrace();
@@ -80,6 +82,8 @@ public class FileManager {
             users = (List<User>) ois.readObject();
             Set<String> loadedTagTypes = (Set<String>) ois.readObject(); // Load the tags
             GlobalTags.getInstance().setTagTypes(loadedTagTypes); // Update the GlobalTags instance
+            Set<String> loadedRestrictedTagTypes = (Set<String>) ois.readObject();
+            GlobalTags.getInstance().setRestrictedTagTypes(loadedRestrictedTagTypes);
         } catch (Exception e) {
             System.err.println("Error loading data: " + e.getMessage());
             e.printStackTrace();

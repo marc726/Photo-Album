@@ -72,17 +72,22 @@ public class Photos {
 
             // Create default tags
             Set<String> defaultTags = new HashSet<>();
+            Set<String> restrictedTagTypes = new HashSet<>();
+
             defaultTags.add("Person");
-            defaultTags.add("Place");
+            defaultTags.add("Place"); restrictedTagTypes.add("Place");
             defaultTags.add("Item");
             // Add more tags as needed
 
             // Set the default tags to GlobalTags
             GlobalTags.getInstance().setTagTypes(defaultTags);
+            GlobalTags.getInstance().setRestrictedTagTypes(restrictedTagTypes);
+
+            System.out.println("Restriced tags: " + GlobalTags.getInstance().getRestrictedTagTypes());
 
             // Save the users list and the tags to data.dat
             try {
-                FileManager.saveData(users, defaultTags);
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             } catch (Exception e) {
                 e.printStackTrace();
             }

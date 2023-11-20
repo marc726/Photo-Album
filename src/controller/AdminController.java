@@ -87,7 +87,7 @@ public class AdminController implements Initializable{
                 User newUser = new User(username);
                 userList.add(newUser);
                 users.getItems().setAll(userList);
-                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes()); // Save the serializable list
+                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes()); // Save the serializable list
             }
         });
     }
@@ -116,7 +116,7 @@ public class AdminController implements Initializable{
             if (result.get() == ButtonType.OK){
                 userList.remove(selectedUser);
                 users.getItems().setAll(userList);
-                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes()); // Save the serializable list
+                FileManager.saveData(userList, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes()); // Save the serializable list
             }
         }
     }

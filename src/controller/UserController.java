@@ -169,7 +169,7 @@ import javafx.scene.control.ListView;
                 user.getAlbums().add(newAlbum); // Add new album to user's album list
                 albumListView.getItems().add(newAlbum); // Update ListView
                 updateUsersList(user);
-                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+                FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
             }
         });
     }
@@ -199,7 +199,7 @@ import javafx.scene.control.ListView;
                 albumListView.refresh();
             });
             updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
 ;
         }
         
@@ -219,7 +219,7 @@ import javafx.scene.control.ListView;
             user.getAlbums().remove(selectedAlbum); // Remove album from user's album list
             albumListView.getItems().remove(selectedAlbum); // Update ListView
             updateUsersList(user);
-            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+            FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
 
         }
     }

@@ -279,7 +279,7 @@ public class SearchController {
         user.getAlbums().add(newAlbum);
         updateUsersList(user);
 
-        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes());
+        FileManager.saveData(users, GlobalTags.getInstance().getTagTypes(), GlobalTags.getInstance().getRestrictedTagTypes());
     }
 
     /**
