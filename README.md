@@ -1,9 +1,3 @@
-# Group: photos38
-
-## Members
-- Marcc Rizzolo (NetID: mtr120)
-- Bhavya Patel (NetID: bsp75)
-
 ## Application Launch Configuration
 
 launch.json
